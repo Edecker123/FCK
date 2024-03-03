@@ -179,13 +179,10 @@ def optimal_rank(dag, tree):
         draw_layers(tree,rank)
     
 
-
-c=parse_qasm('/Users/ethan/Desktop/FCK/9a.qasm')
-g=circuit_to_undirected_graph(c)
-dag=create_dag_from_undirected(g)
-t=find_spanning_tree_as_adj_matrix(dag)
-
-draw_dag(t)
-r=init_rank(t)
-print(dag)
-draw_layers(dag,r)
+for i in range(0,10): 
+    c=parse_qasm('/Users/ethan/Desktop/FCK/sqrt18.qasm')
+    g=circuit_to_undirected_graph(c)
+    dag=create_dag_from_undirected_random(g)
+    t=find_spanning_tree_as_adj_matrix(dag)
+    r=init_rank(t)
+    draw_layers(dag,r)
