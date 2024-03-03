@@ -1,66 +1,41 @@
 from feasible_tree import *
 from circuit_to_dag import * 
 from collections import deque
-
-def draw_layers(dag,layers): 
-    G = nx.DiGraph()  # Use DiGraph for directed graph, Graph for undirected graph
-    # # Add nodes with layer attribute
-    for i, layer in enumerate(layers):
-        G.add_node(i, layer=layer)
-        # Add edges and nodes to the graph
-
-    for i, row in enumerate(dag):
-        for j, weight in enumerate(row):
-            if weight > 0:
-                G.add_edge(i, j, weight=weight)
-
-# Position nodes based on their layer
-    pos = {}
-    layer_counts = {}
-    for node, data in G.nodes(data=True):
-        layer = data['layer']
-        layer_counts[layer] = layer_counts.get(layer, 0) + 1
-        pos[node] = (layer_counts[layer], -layer)
-
-    # Draw the graph
-    nx.draw(G, pos, with_labels=True, node_color='skyblue', node_size=700, edge_color='k', linewidths=1, font_size=15, arrows=True)
-
-    # Draw edge labels
-    edge_labels = nx.get_edge_attributes(G, 'weight')
-    nx.draw_networkx_edge_labels(G, pos, edge_labels=edge_labels)
-
-    # Show the plot
-    plt.show()
-
+from draw import * 
 
 def find_spanning_tree_as_adj_matrix(adj_matrix):
     n = len(adj_matrix)  # Number of nodes in the graph
-    root_nodes = set(range(n))  # Initially assume all nodes are root nodes
     spanning_tree_matrix = [[0 for _ in range(n)] for _ in range(n)]
-
-    # Determine actual root nodes (no incoming edges)
-    for i in range(n):
-        for j in range(n):
-            if adj_matrix[i][j] != 0:  # Adjusted to check for non-zero weight
-                if j in root_nodes:
-                    root_nodes.remove(j)
-
     visited = set()
 
     def dfs(current_node):
         visited.add(current_node)
         for neighbor in range(n):
-            if adj_matrix[current_node][neighbor] != 0 and neighbor not in visited:  # Adjusted for weight
-                spanning_tree_matrix[current_node][neighbor] = adj_matrix[current_node][neighbor]  # Mark edge in spanning tree
+            if adj_matrix[current_node][neighbor] != 0 and neighbor not in visited:
+                spanning_tree_matrix[current_node][neighbor] = 1
+                spanning_tree_matrix[neighbor][current_node] = 1  # Since the graph is undirected
                 dfs(neighbor)
 
-    # Perform DFS from each root node
-    for root_node in root_nodes:
-        if root_node not in visited:
-            dfs(root_node)
+    # Start DFS from the first node (or any node, as every node must be connected in a spanning tree)
+    dfs(0)
 
     return spanning_tree_matrix
 
+def directed_weighted_spanning_tree(spanning_tree_matrix, directed_adj_matrix):
+    n = len(spanning_tree_matrix)  # Number of nodes
+    directed_weighted_tree = [[0 for _ in range(n)] for _ in range(n)]
+
+    for i in range(n):
+        for j in range(i+1, n):  # Avoid redundant checks in an undirected graph
+            if spanning_tree_matrix[i][j] == 1:  # If there's an edge in the spanning tree
+                # Determine the direction and weight from the original directed graph
+                if directed_adj_matrix[i][j] != 0:
+                    directed_weighted_tree[i][j] = directed_adj_matrix[i][j]
+                elif directed_adj_matrix[j][i] != 0:
+                    directed_weighted_tree[j][i] = directed_adj_matrix[j][i]
+                # Note: One of the above conditions must be true for a valid spanning tree edge
+
+    return directed_weighted_tree
 
 def enter_edge(dag_matrix, tree_matrix, deleted_edge, rank): 
     n = len(dag_matrix)  # Number of nodes
@@ -104,17 +79,24 @@ def exchange(tree_matrix, edge_to_delete, edge_to_add, adj_matrix):
 
     # Remove the old edge
     new_tree_matrix[edge_to_delete[0]][edge_to_delete[1]] = 0
-
+   
     # Add the new edge
     new_tree_matrix[edge_to_add[0]][edge_to_add[1]] = adj_matrix[edge_to_add[0]][edge_to_add[1]]
 
     return new_tree_matrix
 
 
-def normalize():
-    #changes all rankings where the smallest rank is zero 
-    pass
-
+def normalize(arr):
+    # Identify and sort the unique numbers
+    unique_numbers = sorted(set(arr))
+    
+    # Create a mapping from each number to its index (normalized value)
+    number_to_normalized = {number: i for i, number in enumerate(unique_numbers)}
+    
+    # Replace each number in the original array with its normalized value
+    normalized_arr = [number_to_normalized[number] for number in arr]
+    
+    return normalized_arr
 
 def cut_value(dag_matrix, tree_matrix, deleted_edge):
     n = len(dag_matrix)  # Number of nodes
@@ -167,22 +149,30 @@ def leave_edge(dag_matrix, tree_matrix):
 
 
 def optimal_rank(dag, tree):
-    # feasible_tree=feasible_tree()
-    rank=init_rank(tree)
-    e=leave_edge(dag,tree)
-    draw_layers(dag,rank)
-    iter=0
-    while(e!=None):
-        f=enter_edge(dag,tree,e,rank)
-        tree=exchange(tree,e,f,dag) 
-        e=leave_edge(dag,tree)
-        draw_layers(tree,rank)
+    # Initialize the rank and the variable to keep track of the optimal rank and its maximum value
+    rank = init_rank(tree)
+    e = leave_edge(dag, tree)
+    iter = 0
+    while e is not None and iter < 4000:
+        f = enter_edge(dag, tree, e, rank)
+        tree = exchange(tree, e, f, dag)
+        e = leave_edge(dag, tree)
+        # Update rank for the current tree configuration
+        rank = init_rank(tree)
+        
+        iter += 1
     
-
-for i in range(0,10): 
+    # Use the optimal rank for drawing
+    draw_layers(t, normalize(rank))
+    print(normalize(rank))
+    # Optionally, return the optimal rank if needed
+    return normalize(rank)
+ 
+for i in range(0,10):
     c=parse_qasm('/Users/ethan/Desktop/FCK/sqrt18.qasm')
     g=circuit_to_undirected_graph(c)
     dag=create_dag_from_undirected_random(g)
-    t=find_spanning_tree_as_adj_matrix(dag)
-    r=init_rank(t)
-    draw_layers(dag,r)
+    t=find_spanning_tree_as_adj_matrix(g)
+    t=directed_weighted_spanning_tree(t,dag)
+    
+    optimal_rank(dag,t)

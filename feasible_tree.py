@@ -1,5 +1,6 @@
 from collections import deque
 
+#TODO fix bug
 def init_rank(spanning_tree):
     n = len(spanning_tree)  # Number of nodes
     in_degree = [0] * n  # Track unscanned in-edges
@@ -25,7 +26,7 @@ def init_rank(spanning_tree):
         for successor in range(n):
             if spanning_tree[node][successor] > 0:  # If there is an edge
                 # The rank is the max of current rank and (predecessor's rank + edge weight)
-                required_rank = rank[node] + spanning_tree[node][successor]
+                required_rank = rank[node] + 1
                 rank[successor] = max(rank[successor], required_rank)
                 
                 in_degree[successor] -= 1
