@@ -80,6 +80,6 @@ def create_dag_from_undirected_random(adj_matrix):
                 else:
                     dag[i][j] = adj_matrix[i][j]
 
-    return dag
+    return dag,order
 
 

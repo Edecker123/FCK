@@ -37,6 +37,19 @@ def directed_weighted_spanning_tree(spanning_tree_matrix, directed_adj_matrix):
 
     return directed_weighted_tree
 
+def make_spanning_tree_undirected(directed_adj_matrix):
+    n = len(directed_adj_matrix)  # Number of nodes
+    undirected_adj_matrix = [[0 for _ in range(n)] for _ in range(n)]  # Initialize undirected adjacency matrix
+
+    for i in range(n):
+        for j in range(n):
+            # If there's an edge from i to j, make sure it's bidirectional
+            if directed_adj_matrix[i][j] > 0:
+                undirected_adj_matrix[i][j] = directed_adj_matrix[i][j]
+                undirected_adj_matrix[j][i] = directed_adj_matrix[i][j]  # Make the edge bidirectional
+
+    return undirected_adj_matrix
+
 def enter_edge(dag_matrix, tree_matrix, deleted_edge, rank): 
     n = len(dag_matrix)  # Number of nodes
     visited = [False] * n
@@ -75,11 +88,11 @@ def enter_edge(dag_matrix, tree_matrix, deleted_edge, rank):
 
 def exchange(tree_matrix, edge_to_delete, edge_to_add, adj_matrix):
     # Copy the original matrix to avoid modifying it directly
+    print(edge_to_delete,edge_to_add)
+    draw_dag(tree_matrix)
     new_tree_matrix = [row[:] for row in tree_matrix]
-
     # Remove the old edge
     new_tree_matrix[edge_to_delete[0]][edge_to_delete[1]] = 0
-   
     # Add the new edge
     new_tree_matrix[edge_to_add[0]][edge_to_add[1]] = adj_matrix[edge_to_add[0]][edge_to_add[1]]
 
@@ -138,27 +151,31 @@ def cut_value(dag_matrix, tree_matrix, deleted_edge):
 
 def leave_edge(dag_matrix, tree_matrix):
     n = len(tree_matrix)  # Number of nodes
+    min_cut_value = 0
+    min_cut_edge = None
     for i in range(n):
         for j in range(n):
             if tree_matrix[i][j] != 0:  # There is an edge in the spanning tree
                 # Calculate the cut value of the current edge
                 current_cut_value = cut_value(dag_matrix, tree_matrix, (i, j))
                 if current_cut_value < 0:
-                    return (i, j)  # Return the edge if its cut value is negative
-    return None  # Return None if no edge with a negative cut value is found
+                    if min_cut_value == 0 or current_cut_value < min_cut_value:
+                        min_cut_value = current_cut_value
+                        min_cut_edge = (i, j)
+    return min_cut_edge  # Return the edge with the lowest cut value
 
 
 def optimal_rank(dag, tree):
     # Initialize the rank and the variable to keep track of the optimal rank and its maximum value
-    rank = init_rank(tree)
+    rank = rank_nodes(make_spanning_tree_undirected(tree) ,tree)
     e = leave_edge(dag, tree)
     iter = 0
     while e is not None and iter < 4000:
         f = enter_edge(dag, tree, e, rank)
-        tree = exchange(tree, e, f, dag)
-        e = leave_edge(dag, tree)
+        new_tree = exchange(tree, e, f, dag)
+        e = leave_edge(dag, new_tree)
         # Update rank for the current tree configuration
-        rank = init_rank(tree)
+        rank = rank_nodes(make_spanning_tree_undirected(new_tree) ,new_tree)
         
         iter += 1
     
@@ -168,11 +185,10 @@ def optimal_rank(dag, tree):
     # Optionally, return the optimal rank if needed
     return normalize(rank)
  
-for i in range(0,10):
-    c=parse_qasm('/Users/ethan/Desktop/FCK/sqrt18.qasm')
-    g=circuit_to_undirected_graph(c)
-    dag=create_dag_from_undirected_random(g)
-    t=find_spanning_tree_as_adj_matrix(g)
-    t=directed_weighted_spanning_tree(t,dag)
-    
-    optimal_rank(dag,t)
+c=parse_qasm('/Users/ethan/Desktop/FCK/9a.qasm')
+g=circuit_to_undirected_graph(c)
+dag,order=create_dag_from_undirected_random(g)
+t=find_spanning_tree_as_adj_matrix(g)
+tree=directed_weighted_spanning_tree(t,dag)
+rank=rank_nodes(t,tree)
+optimal_rank(dag,tree)

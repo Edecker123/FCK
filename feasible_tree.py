@@ -1,44 +1,41 @@
 from collections import deque
+from draw import * 
 
-#TODO fix bug
-def init_rank(spanning_tree):
-    n = len(spanning_tree)  # Number of nodes
-    in_degree = [0] * n  # Track unscanned in-edges
-    rank = [float('-inf')] * n  # Initialize ranks with negative infinity
-    
-    # Compute initial in-degrees
-    for j in range(n):
-        for i in range(n):
-            if spanning_tree[i][j] > 0:  # Check for a positive weight indicating an edge
-                in_degree[j] += 1
+def rank_nodes(undirected_adj_matrix, directed_adj_matrix):
+    n = len(undirected_adj_matrix)  # Number of nodes
+    ranks = [None] * n  # Initialize ranks with None
+    visited = [False] * n  # Keep track of visited nodes
 
-    # Initialize queue with nodes having no unscanned in-edges
-    queue = deque([i for i, degree in enumerate(in_degree) if degree == 0])
+    # Find a starting node: one with an out-degree in the directed graph
+    start_node = next((i for i, row in enumerate(directed_adj_matrix) if any(weight > 0 for weight in row)), 0)
 
-    # Initially, rank those with no in-edges as 0
-    for node in queue:
-        rank[node] = 0
+    # Initialize queue for BFS and set the rank of the start node
+    queue = deque([(start_node, 0)])
+    ranks[start_node] = 0
+    visited[start_node] = True
 
     while queue:
-        node = queue.popleft()
-        
-        # Calculate rank based on weighted edges
-        for successor in range(n):
-            if spanning_tree[node][successor] > 0:  # If there is an edge
-                # The rank is the max of current rank and (predecessor's rank + edge weight)
-                required_rank = rank[node] + 1
-                rank[successor] = max(rank[successor], required_rank)
-                
-                in_degree[successor] -= 1
-                if in_degree[successor] == 0:
-                    queue.append(successor)
+        current_node, current_rank = queue.popleft()
 
-    # Fix ranks to start from 0 and be continuous
-    min_rank = min(rank)
-    rank = [r - min_rank for r in rank]
+        for adjacent_node in range(n):
+            if undirected_adj_matrix[current_node][adjacent_node] > 0 and not visited[adjacent_node]:
+                # Determine the direction and update the rank accordingly
+                if directed_adj_matrix[current_node][adjacent_node] > 0:
+                    # Edge direction matches the traversal direction (increment rank)
+                    new_rank = current_rank + 1
+                elif directed_adj_matrix[adjacent_node][current_node] > 0:
+                    # Edge direction is opposite to the traversal direction (decrement rank)
+                    new_rank = current_rank - 1
+                else:
+                    # This condition should not occur in a properly constructed spanning tree
+                    print('fuck')
+                    continue
 
-    return rank
+                ranks[adjacent_node] = new_rank
+                visited[adjacent_node] = True
+                queue.append((adjacent_node, new_rank))
 
+    return ranks
 
 
 #### Not in use for now 
@@ -90,9 +87,9 @@ def find_min_slack_non_tree_edge(spanning_tree, adjacency_matrix, ranks):
 
     return min_slack_edge, min_slack
 
-def feasible_tree(spanning_tree,adj_matrix): 
-    rank=init_rank(spanning_tree) #get inital ranking of the tree
-    tight_tree_size, tight_tree=tight_tree(adj_matrix,rank,0)
+# def feasible_tree(spanning_tree,adj_matrix): 
+#     rank=init_rank(spanning_tree) #get inital ranking of the tree
+#     tight_tree_size, tight_tree=tight_tree(adj_matrix,rank,0)
 
     # while tight_tree_size < len(spanning_tree): #while our tree is not tight with all vertices 
     #     e,delta= find_min_slack_non_tree_edge(tight_tree,adj_matrix,rank)
