@@ -39,6 +39,9 @@ def init_rank(spanning_tree):
     return rank
 
 
+
+#### Not in use for now 
+
 def is_tight_edge(node1, node2, ranks):
     # A tight edge has a ranking of 1 because we are 1 layer away 
     return abs(ranks[node1] - ranks[node2]) == 1
