@@ -3,6 +3,39 @@ from circuit_to_dag import *
 from collections import deque
 from draw import * 
 
+def head_tail(undirected_tree, edge_to_delete):
+    # Edge to delete is a tuple (from_node, to_node)
+    from_node, to_node = edge_to_delete
+
+    weight=undirected_tree[edge_to_delete[0]][edge_to_delete[1]]
+    # Function to perform BFS and find component nodes
+    def bfs(start_node, tree):
+        visited = set()
+        queue = deque([start_node])
+        visited.add(start_node)
+        
+        while queue:
+            current_node = queue.popleft()
+            for adjacent, edge in enumerate(tree[current_node]):
+                if edge > 0 and adjacent not in visited:
+                    visited.add(adjacent)
+                    queue.append(adjacent)
+                    
+        return visited
+    
+    undirected_tree[edge_to_delete[0]][edge_to_delete[1]]=0
+    undirected_tree[edge_to_delete[1]][edge_to_delete[0]]=0
+
+    # Perform BFS from both nodes of the deleted edge in the undirected tree
+    head_component = bfs(to_node, undirected_tree)  # Start from to_node for head component
+    tail_component = bfs(from_node, undirected_tree)  # Start from from_node for tail component
+
+    undirected_tree[edge_to_delete[0]][edge_to_delete[1]]=weight
+    undirected_tree[edge_to_delete[1]][edge_to_delete[0]]=weight
+
+    # Return the nodes in each component
+    return list(head_component), list(tail_component)
+
 def find_spanning_tree_as_adj_matrix(adj_matrix):
     n = len(adj_matrix)  # Number of nodes in the graph
     spanning_tree_matrix = [[0 for _ in range(n)] for _ in range(n)]
@@ -50,27 +83,16 @@ def make_spanning_tree_undirected(directed_adj_matrix):
 
     return undirected_adj_matrix
 
-def enter_edge(dag_matrix, tree_matrix, deleted_edge, rank): 
+def enter_edge(dag_matrix, tree_matrix, deleted_edge, rank,undirected_tree): 
+    # print(deleted_edge)
     n = len(dag_matrix)  # Number of nodes
     visited = [False] * n
     tail_component = set()
 
-    def dfs(node):
-        visited[node] = True
-        for i in range(n):
-            if tree_matrix[node][i] != 0 and not visited[i]:  # Use the tree for traversal
-                dfs(i)
-            if node == deleted_edge[0] and i == deleted_edge[1]:  # Skip the deleted edge
-                continue
+    tail_component,head_component=head_tail(undirected_tree, deleted_edge)
 
-    # Identify the tail component by starting DFS from the tail node of the deleted edge
-    dfs(deleted_edge[1])
-    tail_component = {i for i, visited_node in enumerate(visited) if visited_node}
-
-    # Reset visited for identifying the head component
-    visited = [not x for x in visited]
-    head_component = {i for i, visited_node in enumerate(visited) if visited_node}
-
+    # print(head_component,tail_component)
+    # draw_dag(tree_matrix)
     min_rank_diff = float('inf')
     min_edge = None
 
@@ -83,13 +105,12 @@ def enter_edge(dag_matrix, tree_matrix, deleted_edge, rank):
                         min_rank_diff = rank_diff
                         min_edge = (i, j)
 
+    if min_edge==None:
+        print('f')
     return min_edge
 
 
 def exchange(tree_matrix, edge_to_delete, edge_to_add, adj_matrix):
-    # Copy the original matrix to avoid modifying it directly
-    print(edge_to_delete,edge_to_add)
-    draw_dag(tree_matrix)
     new_tree_matrix = [row[:] for row in tree_matrix]
     # Remove the old edge
     new_tree_matrix[edge_to_delete[0]][edge_to_delete[1]] = 0
@@ -111,7 +132,7 @@ def normalize(arr):
     
     return normalized_arr
 
-def cut_value(dag_matrix, tree_matrix, deleted_edge):
+def cut_value(dag_matrix, tree_matrix, deleted_edge,undirected_tree):
     n = len(dag_matrix)  # Number of nodes
     visited = [False] * n
     tail_component = set()
@@ -119,22 +140,7 @@ def cut_value(dag_matrix, tree_matrix, deleted_edge):
     # Initial cut value including the deleted tree edge
     cut_value = tree_matrix[deleted_edge[0]][deleted_edge[1]]
 
-    def dfs(node):
-        visited[node] = True
-        for i in range(n):
-            if tree_matrix[node][i] != 0 and not visited[i]:  # Use the tree for traversal
-                dfs(i)
-            if node == deleted_edge[0] and i == deleted_edge[1]:  # Skip the deleted edge
-                continue
-
-    # Identify the tail component by starting DFS from the tail node of the deleted edge
-    dfs(deleted_edge[1])
-    tail_component = {i for i, visited_node in enumerate(visited) if visited_node}
-
-    # Reset visited for identifying the head component
-    visited = [not x for x in visited]
-    head_component = {i for i, visited_node in enumerate(visited) if visited_node}
-
+    tail_component,head_component=head_tail(undirected_tree,deleted_edge)
 
     # Calculate the cut value based on edges in the DAG
     for i in range(n):
@@ -149,46 +155,44 @@ def cut_value(dag_matrix, tree_matrix, deleted_edge):
     return cut_value
 
 
-def leave_edge(dag_matrix, tree_matrix):
+def leave_edge(dag_matrix, tree_matrix,undirected_tree):
     n = len(tree_matrix)  # Number of nodes
-    min_cut_value = 0
-    min_cut_edge = None
     for i in range(n):
         for j in range(n):
             if tree_matrix[i][j] != 0:  # There is an edge in the spanning tree
                 # Calculate the cut value of the current edge
-                current_cut_value = cut_value(dag_matrix, tree_matrix, (i, j))
+                current_cut_value = cut_value(dag_matrix, tree_matrix, (i, j),undirected_tree)
                 if current_cut_value < 0:
-                    if min_cut_value == 0 or current_cut_value < min_cut_value:
-                        min_cut_value = current_cut_value
-                        min_cut_edge = (i, j)
-    return min_cut_edge  # Return the edge with the lowest cut value
+                    return(i,j)
+    return None  # Return the edge with the lowest cut value
 
 
 def optimal_rank(dag, tree):
     # Initialize the rank and the variable to keep track of the optimal rank and its maximum value
+    
     rank = rank_nodes(make_spanning_tree_undirected(tree) ,tree)
-    e = leave_edge(dag, tree)
+    e = leave_edge(dag, tree,make_spanning_tree_undirected(tree))
     iter = 0
-    while e is not None and iter < 4000:
-        f = enter_edge(dag, tree, e, rank)
+    while e is not None and iter < 10:
+        f = enter_edge(dag, tree, e, rank,make_spanning_tree_undirected(tree))
         new_tree = exchange(tree, e, f, dag)
-        e = leave_edge(dag, new_tree)
+        e = leave_edge(dag, new_tree, make_spanning_tree_undirected(new_tree))
         # Update rank for the current tree configuration
         rank = rank_nodes(make_spanning_tree_undirected(new_tree) ,new_tree)
         
-        iter += 1
-    
+        iter +=1
+        print(iter)
     # Use the optimal rank for drawing
-    draw_layers(t, normalize(rank))
-    print(normalize(rank))
+    draw_layers(dag,rank)
     # Optionally, return the optimal rank if needed
-    return normalize(rank)
+    return rank
  
-c=parse_qasm('/Users/ethan/Desktop/FCK/9a.qasm')
-g=circuit_to_undirected_graph(c)
-dag,order=create_dag_from_undirected_random(g)
-t=find_spanning_tree_as_adj_matrix(g)
-tree=directed_weighted_spanning_tree(t,dag)
-rank=rank_nodes(t,tree)
-optimal_rank(dag,tree)
+for i in range(0,10):
+    transpile_to_cz_u3('/Users/ethan/Desktop/FCK/adder_n433.qasm','/Users/ethan/Desktop/FCK/adder_n433_uc.qasm')
+    c=parse_qasm('/Users/ethan/Desktop/FCK/adder_n433_uc.qasm')
+    g=circuit_to_undirected_graph(c)
+    dag,order=create_dag_from_undirected_random(g)
+    t=find_spanning_tree_as_adj_matrix(g)
+    tree=directed_weighted_spanning_tree(t,dag)
+    rank=optimal_rank(dag,tree)
+    print(rank)

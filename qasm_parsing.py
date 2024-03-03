@@ -1,6 +1,8 @@
 import re
 from qiskit import QuantumCircuit
 import numpy as np
+from qiskit import QuantumCircuit, transpile
+
 # circuit must be flattened for this parser to work when transpiling to qasm. 
 class Gate:
     def __init__(self, name, qubits):
@@ -134,3 +136,16 @@ def ran_circuit_gen(num_qubits, num_gates):
     #     f.write(qasm_str)
 
     return circuit
+
+def transpile_to_cz_u3(qasm_file_path, output_file_path):
+    # Load the circuit from the QASM file
+    circuit = QuantumCircuit.from_qasm_file(qasm_file_path)
+    
+    # Define the target basis gates
+    basis_gates = ['u3', 'cz']
+    
+    # Transpile the circuit
+    transpiled_circuit = transpile(circuit, basis_gates=basis_gates)
+    
+    # Write the transpiled circuit to a new QASM file
+    transpiled_circuit.qasm(filename=output_file_path)

@@ -1,13 +1,13 @@
 from collections import deque
 from draw import * 
 
-def rank_nodes(undirected_adj_matrix, directed_adj_matrix):
-    n = len(undirected_adj_matrix)  # Number of nodes
+def rank_nodes(undirected_tree, directed_tree):
+    n = len(undirected_tree)  # Number of nodes
     ranks = [None] * n  # Initialize ranks with None
     visited = [False] * n  # Keep track of visited nodes
 
     # Find a starting node: one with an out-degree in the directed graph
-    start_node = next((i for i, row in enumerate(directed_adj_matrix) if any(weight > 0 for weight in row)), 0)
+    start_node = next((i for i, row in enumerate(directed_tree) if any(weight > 0 for weight in row)), 0)
 
     # Initialize queue for BFS and set the rank of the start node
     queue = deque([(start_node, 0)])
@@ -18,12 +18,12 @@ def rank_nodes(undirected_adj_matrix, directed_adj_matrix):
         current_node, current_rank = queue.popleft()
 
         for adjacent_node in range(n):
-            if undirected_adj_matrix[current_node][adjacent_node] > 0 and not visited[adjacent_node]:
+            if undirected_tree[current_node][adjacent_node] > 0 and not visited[adjacent_node]:
                 # Determine the direction and update the rank accordingly
-                if directed_adj_matrix[current_node][adjacent_node] > 0:
+                if directed_tree[current_node][adjacent_node] > 0:
                     # Edge direction matches the traversal direction (increment rank)
                     new_rank = current_rank + 1
-                elif directed_adj_matrix[adjacent_node][current_node] > 0:
+                elif directed_tree[adjacent_node][current_node] > 0:
                     # Edge direction is opposite to the traversal direction (decrement rank)
                     new_rank = current_rank - 1
                 else:
@@ -34,7 +34,6 @@ def rank_nodes(undirected_adj_matrix, directed_adj_matrix):
                 ranks[adjacent_node] = new_rank
                 visited[adjacent_node] = True
                 queue.append((adjacent_node, new_rank))
-
     return ranks
 
 
