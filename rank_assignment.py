@@ -210,13 +210,14 @@ def optimal_rank(dag, tree):
     f = enter_edge(dag, e, rank,make_spanning_tree_undirected(tree))
 
     iter = 0
-    while e is not None and iter<200:
+    while e is not None and iter<20:
         tree = exchange(tree, e, f, dag)
         rank = rank_nodes(make_spanning_tree_undirected(tree) ,tree)
         e = leave_edge(dag, tree, make_spanning_tree_undirected(tree))
         f = enter_edge(dag, e, rank,make_spanning_tree_undirected(tree))
         # Update rank for the current tree configuration
         iter +=1
+        print(iter)
     print('number of iterations', iter)
     # Use the optimal rank for drawing
     # Optionally, return the optimal rank if needed
@@ -224,21 +225,21 @@ def optimal_rank(dag, tree):
  
 min_rank=[]
 min=float('inf')
-for i in range(0,10):
-    c=parse_qasm('/Users/ethan/Desktop/FCK/qasm_files/random_circuit.qasm')
+for i in range(0,15):
+    c=parse_qasm('/Users/ethan/Desktop/FCK/sqrt18.qasm')
     g=circuit_to_undirected_graph(c)
     dag,order=create_dag_from_undirected_random(g)
     t=find_spanning_tree_as_adj_matrix(g)
     tree=directed_weighted_spanning_tree(t,dag)
 
     rank_o=rank_nodes(t,tree)
-    rank=optimal_rank(dag,tree)
-    for r in [rank_o,rank]:
+    for r in [rank_o]:
         sum=sum_of_rank_differences(dag,r)
         print(sum)
         if min>sum: 
             min_rank=r
             min=sum
 
-draw_layers(dag,min_rank)
+draw_layers(dag, min_rank)
+
 
