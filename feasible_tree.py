@@ -5,7 +5,6 @@ def rank_nodes(undirected_tree, directed_tree):
     n = len(undirected_tree)  # Number of nodes
     ranks = [None] * n  # Initialize ranks with None
     visited = [False] * n  # Keep track of visited nodes
-
     # Find a starting node: one with an out-degree in the directed graph
     start_node = next((i for i, row in enumerate(directed_tree) if any(weight > 0 for weight in row)), 0)
 
