@@ -7,9 +7,10 @@ from cross_minimization import *
 from max_cut import * 
 from scheduling import *
 
+transpile_to_cz_u3('qasm_files/hhl_n7_transpiled.qasm','qasm_files/hhl_n7_transpiled.qasm')
 min_len=float('inf')
 for i in range(80):
-    circuit=extract_parallel_2q_gate_layers('/Users/ethan/Desktop/FCK/qasm_files/9a.qasm')
+    circuit=extract_parallel_2q_gate_layers('qasm_files/hhl_n7_transpiled.qasm')
     graph=list_to_undirected_graph(circuit) 
 
     ranks=greedy_max_cut_adj_matrix(graph)
@@ -29,13 +30,15 @@ for i in range(80):
             layers_positioned[0]=sort_median(layers_positioned[1], layers_positioned[0], graph)
     
     # draw_layers_ordered(graph,[layers_positioned[0],layers_positioned[1]])
-
+    # layers=schedule(circuit, layers_positioned, ranks)
     layers=[]
     for layer in circuit: 
         groups=greedy_group_edges(layer,layers_positioned,ranks)
         for i in groups: 
             layers.append(i)
-            draw_circuit_layers(graph,[layers_positioned[0],layers_positioned[1]], i)
+            # draw_circuit_layers(graph,[layers_positioned[0],layers_positioned[1]], i)
+    # for i in layers: 
+    #     draw_circuit_layers(graph,[layers_positioned[0],layers_positioned[1]], i)
     if len(layers)<min_len:
         min_len=len(layers)
     

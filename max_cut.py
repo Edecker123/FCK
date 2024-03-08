@@ -75,4 +75,52 @@ def greedy_group_edges(edges, positions,ranks):
             groups.remove(group)
     return groups
 
+def sort_groups(groups):
+    return sorted(groups, key=len)
+def greedy_layer_merge(edges, positions, ranks):
+    groups = [[]]  # Initialize list of groups
 
+    # Modified part: Just declare an empty list, as we don't place an edge immediately
+    for edge in edges:
+        if ranks[edge[0]] == ranks[edge[1]]:
+            groups.append([[edge[0], edge[1]]])
+            continue
+        if ranks[edge[0]] > ranks[edge[1]]:
+            edge = [edge[1], edge[0]]
+
+        placed = False
+        for group in groups:
+            if can_add_edge_to_group(edge, group, positions, ranks):
+                group.append(edge)  # Add edge to the group
+                placed = True
+                break
+
+        if not placed:
+            groups.append([edge])  # Create a new group with the edge
+
+        groups=sort_groups(groups)
+    # Remove empty groups
+    groups = [group for group in groups if group]
+
+    # Find the largest group
+    largest_group = max(groups, key=len)
+
+    # Collect all edges not in the largest group
+    leftover_edges = [edge for group in groups for edge in group if group != largest_group]
+
+    return [largest_group, leftover_edges]
+
+def schedule(layers,  positions, ranks): 
+    circuit_layered=[]
+
+    while len(layers)>0:
+        toplayer=layers.pop()
+        split_layers=greedy_layer_merge(toplayer,positions, ranks)
+
+        circuit_layered.insert(0,split_layers[0])
+        if len(split_layers[1])>0 and len(layers)>1:
+            layers[0]=layers[0] + split_layers[1]
+        elif len(split_layers[1])>0:
+            layers.append(split_layers[1])
+
+    return circuit_layered
