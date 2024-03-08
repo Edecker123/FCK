@@ -1,7 +1,35 @@
 from collections import deque
 from draw import * 
 
-def rank_nodes(undirected_tree, directed_tree):
+def rank_nodes_pos(undirected_tree, directed_tree):
+    n = len(undirected_tree)  # Number of nodes
+    ranks = [-1] * n  # Initialize ranks with -1 to indicate unassigned
+    visited = [False] * n  # Keep track of visited nodes
+
+    # Find a root node: one with an out-degree in the directed graph but no in-degree
+    # This could be more complex in a general graph but simplified here due to tree structure
+    root_node = next((i for i, row in enumerate(directed_tree) if any(weight > 0 for weight in row)), 0)
+
+    # Initialize queue for BFS and set the rank of the root node
+    queue = deque([(root_node, 0)])
+    ranks[root_node] = 0
+    visited[root_node] = True
+
+    while queue:
+        current_node, current_rank = queue.popleft()
+
+        for adjacent_node, weight in enumerate(undirected_tree[current_node]):
+            if weight > 0 and not visited[adjacent_node]:
+                # Ensure no adjacent nodes have the same rank by only incrementing
+                new_rank = current_rank + 1
+
+                ranks[adjacent_node] = new_rank
+                visited[adjacent_node] = True
+                queue.append((adjacent_node, new_rank))
+
+    return ranks
+
+def rank_nodes(undirected_tree, directed_tree,graph):
     n = len(undirected_tree)  # Number of nodes
     ranks = [None] * n  # Initialize ranks with None
     visited = [False] * n  # Keep track of visited nodes
@@ -33,6 +61,18 @@ def rank_nodes(undirected_tree, directed_tree):
                 ranks[adjacent_node] = new_rank
                 visited[adjacent_node] = True
                 queue.append((adjacent_node, new_rank))
+
+    # make feasible
+    for i in range(n):
+        for j in range(i + 1, n):  # Check each pair of nodes once
+            if graph[i][j] > 0 and ranks[i] == ranks[j]:  # If there's an edge with equal ranks
+                # Attempt to resolve rank conflict
+                # This simplistic approach increments the rank of one node
+                # More complex logic may be required to avoid creating new conflicts
+                adjustment = 1
+                while any((graph[k][j] > 0 and ranks[k] == ranks[j] + adjustment) for k in range(n)):
+                    adjustment += 1
+                ranks[j] += adjustment
     return ranks
 
 

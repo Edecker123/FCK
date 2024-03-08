@@ -83,3 +83,24 @@ def create_dag_from_undirected_random(adj_matrix):
     return dag,order
 
 
+def list_to_undirected_graph(edges_list):
+    # Determine the maximum node index to initialize the graph
+    # Assuming edges are 0-indexed
+    max_node = 0
+    for inner_list in edges_list:
+        for edge in inner_list:
+            max_node = max(max_node, edge[0], edge[1])
+    n = max_node + 1
+    
+    # Initialize a graph with edge weights set to 0
+    G = [[0 for _ in range(n)] for _ in range(n)]
+    
+    # Process each inner list if it has more than one edge
+    for inner_list in edges_list:
+        if len(inner_list) > 1:  # Only consider lists with more than one edge
+            for edge in inner_list:
+                qubit1, qubit2 = edge
+                G[qubit1][qubit2] += 1
+                G[qubit2][qubit1] += 1
+                
+    return G
