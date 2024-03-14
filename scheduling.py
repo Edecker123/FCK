@@ -3,7 +3,18 @@ from collections import deque
 from qiskit.converters import circuit_to_dag
 from qiskit import QuantumCircuit
 from draw import * 
-from cross_minimization import *
+from cross_minimizationBCM import *
+from qasm_parsing import *
+from qiskit.dagcircuit import DAGCircuit, DAGNode
+from qiskit.circuit import Delay
+from qiskit.converters import circuit_to_dag, dag_to_circuit
+from qiskit.dagcircuit import DAGCircuit
+from qiskit.visualization import dag_drawer
+from qiskit.circuit.library import ZGate
+from qiskit.circuit import ControlledGate
+from qiskit.dagcircuit import DAGCircuit
+from collections import deque
+import random 
 
 def extract_parallel_2q_gate_layers(qasm_file_path):
     # Load the quantum circuit from the QASM file
@@ -55,7 +66,16 @@ def cross_check(positions, edges):
     
 def can_add_edge_to_group(new_edge, group, positions,ranks):
     # Check if the new edge can be added to the existing group without causing any crossings
+    if ranks[new_edge[0]]==ranks[new_edge[1]]:
+            return False
+    
+    if ranks[new_edge[0]]>ranks[new_edge[1]]:
+        new_edge=[new_edge[1],new_edge[0]]
+
     for edge in group:
+        if ranks[edge[0]]>ranks[edge[1]]:
+            edge=[edge[1],edge[0]]
+
         if ranks[edge[0]]==ranks[edge[1]]:
             return False
         if cross_check(positions,[new_edge, edge] ) == 0:
@@ -92,6 +112,7 @@ def greedy_group_edges(edges, positions,ranks):
 
 def sort_groups(groups):
     return sorted(groups, key=len)
+
 def greedy_layer_merge(edges, positions, ranks):
     groups = [[]]  # Initialize list of groups
 
@@ -118,6 +139,7 @@ def greedy_layer_merge(edges, positions, ranks):
     groups = [group for group in groups if group]
 
     # Find the largest group
+
     largest_group = max(groups, key=len)
 
     # Collect all edges not in the largest group
@@ -125,17 +147,55 @@ def greedy_layer_merge(edges, positions, ranks):
 
     return [largest_group, leftover_edges]
 
-def schedule(layers,  positions, ranks): 
+def merge_layers(current_layer, next_layer):
+    """
+    Merge pairs from next_layer into current_layer with the condition that
+    none of the vertices in the pair exists in any pair in current_layer.
+    
+    Parameters:
+    - current_layer: List of tuples, where each tuple is a pair of vertices.
+    - next_layer: List of tuples, where each tuple is a pair of vertices to be potentially merged into current_layer.
+    
+    Returns:
+    - A new merged layer that includes pairs from both current_layer and eligible pairs from next_layer.
+    """
+    
+    # Create a set of all vertices currently in the current_layer for fast lookup
+    vertices_in_current = {vertex for pair in current_layer for vertex in pair}
+    
+    # Iterate over each pair in the next_layer to check if it can be merged
+    for pair in next_layer:
+        if not any(vertex in vertices_in_current for vertex in pair):
+            # If neither vertex is in current_layer, add the pair to current_layer
+            current_layer.append(pair)
+            next_layer.remove(pair)
+            # Update the set of vertices in current_layer
+            vertices_in_current.update(pair)
+    
+    return current_layer, next_layer
+
+    
+
+def schedule(layers,  positions, ranks):
     circuit_layered=[]
-
     while len(layers)>0:
-        toplayer=layers.pop()
+        toplayer=layers.pop(0)
         split_layers=greedy_layer_merge(toplayer,positions, ranks)
+        circuit_layered.append(split_layers[0])
 
-        circuit_layered.insert(0,split_layers[0])
         if len(split_layers[1])>0 and len(layers)>1:
-            layers[0]=layers[0] + split_layers[1]
-        elif len(split_layers[1])>0:
+            current_layer=layers.pop(0)
+            new_layer, next_layer=merge_layers(split_layers[1], current_layer)
+            if len(next_layer)>0:
+                layers.insert(0, next_layer)
+            layers.insert(0,new_layer) 
+        elif len(split_layers[1])>0 and len(layers)==0:
             layers.append(split_layers[1])
 
     return circuit_layered
+
+def check_schedule(layers,schedule): 
+    pass
+
+
+

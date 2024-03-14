@@ -102,6 +102,8 @@ def draw_circuit_layers(dag, layers_list, edges_to_draw):
 
     # Add only specified edges
     for edge in edges_to_draw:
+        if len(edge)<2:
+            continue
         source, target = edge
         # Ensure both nodes are in the graph before adding the edge
         if G.has_node(source) and G.has_node(target):

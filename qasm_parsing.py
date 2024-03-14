@@ -148,3 +148,22 @@ def transpile_to_cz_u3(qasm_file_path, output_file_path):
     
     # Write the transpiled circuit to a new QASM file
     transpiled_circuit.qasm(filename=output_file_path)
+
+def count_1q_gates(qasm_file_path):
+    # List of common 1-qubit gates. Add more if needed.
+    one_qubit_gates = ['x', 'y', 'z', 'h', 's', 't', 'sdg', 'tdg', 'u1', 'u2', 'u3', 'rx', 'ry', 'rz']
+    
+    # Initialize the count of 1Q gates
+    one_qubit_gate_count = 0
+    
+    # Open and read the QASM file
+    with open(qasm_file_path, 'r') as file:
+        for line in file:
+            # Split the line into components
+            parts = line.strip().split()
+            
+            # Check if the line represents a 1-qubit gate
+            if parts and parts[0] in one_qubit_gates:
+                one_qubit_gate_count += 1
+                
+    return one_qubit_gate_count
