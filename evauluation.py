@@ -5,7 +5,7 @@ from cross_minimizationBCM import *
 from max_cut import * 
 from scheduling import *
 import math
-
+from GRASP import *
 class CCircuit():
     def __init__(self, qasm_file):
         # basis_qasm=transpile_to_cz_u3(qasm_file, qasm_file) 
@@ -29,12 +29,16 @@ class CCircuit():
 
         self.qubitPositions=rank_to_layers(self.qubitRanks) 
 
-    
-        if len(self.qubitPositions)>1:
-            sort_medianIter(self.qubitPositions, self.graph, 15)
         
-        self.schedule=schedule(circuit, self.qubitPositions,self.qubitRanks)
-        # self.schedule=circuit
+        self.qubitPositions=GRASP(self.qubitRanks, self.graph)
+        self.qubitPositions={0:self.qubitPositions[0], 1:self.qubitPositions[1]}
+        
+        # self.schedule=schedule(circuit, self.qubitPositions,self.qubitRanks)
+        self.schedule=circuit
+
+        for layer in self.schedule:
+            if len(layer)>1: 
+                draw_circuit_layers(self.graph, [self.qubitPositions[0], self.qubitPositions[1]], layer)
     
     def get_2QPulse(self): 
         return len(self.schedule)
