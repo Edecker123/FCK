@@ -6,6 +6,15 @@ from max_cut import *
 from scheduling import *
 import math
 from GRASP import *
+import networkx as nx
+from maxcut_master.maxcut._solvers import _sdp
+import numpy as np
+
+
+def has_more_than_one_number(lst):
+    return len(set(lst)) > 1
+
+
 class CCircuit():
     def __init__(self, qasm_file):
         # basis_qasm=transpile_to_cz_u3(qasm_file, qasm_file) 
@@ -25,21 +34,17 @@ class CCircuit():
         self.optimizedSchedule=len(circuit)
         self.graph=list_to_undirected_graph(circuit) 
 
-        self.qubitRanks=greedy_max_cut_adj_matrix(self.graph)
+        sdp_cut=_sdp.MaxCutSDP(nx.from_numpy_array(np.array(self.graph)))
+        sdp_cut.solve(verbose=False)
+        self.qubitRanks=sdp_cut._results['cut']
 
-        self.qubitPositions=rank_to_layers(self.qubitRanks) 
+        self.qubitRanks=[0 if x == -1 else 1 for x in self.qubitRanks]
 
-        
         self.qubitPositions=GRASP(self.qubitRanks, self.graph)
         self.qubitPositions={0:self.qubitPositions[0], 1:self.qubitPositions[1]}
-        
-        # self.schedule=schedule(circuit, self.qubitPositions,self.qubitRanks)
-        self.schedule=circuit
 
-        for layer in self.schedule:
-            if len(layer)>1: 
-                draw_circuit_layers(self.graph, [self.qubitPositions[0], self.qubitPositions[1]], layer)
-    
+        self.schedule=schedule(circuit, self.qubitPositions,self.qubitRanks)
+
     def get_2QPulse(self): 
         return len(self.schedule)
 
@@ -71,7 +76,6 @@ import os
 
 qasm_dir = 'qasm_files'
 qasm_files = [f for f in os.listdir(qasm_dir) if f.endswith('.qasm')]
-
 for qasm_file in qasm_files:
     file_path = os.path.join(qasm_dir, qasm_file)
     

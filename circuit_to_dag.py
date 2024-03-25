@@ -13,7 +13,7 @@ def circuit_to_undirected_graph(circuit: Circuit):
     # Initialize a graph with edge weights set to 0
     G = [[0 for _ in range(n)] for _ in range(n)]
     
-    # Count multi-qubit gates
+    # Count multi-qubit gatesf
     for gate in circuit.gates:
         qubits = gate.qubits
         

@@ -2,7 +2,7 @@ from draw import *
 from circuit_to_dag import *
 from collections import Counter
 from math import floor
-
+from cross_minimizationBCM import *
 def vertex_degree_with_respect_to_V(graph, vertex, V):
     if vertex < len(graph):
         # Calculate the degree of the specified vertex with respect to vertices in V
@@ -36,8 +36,10 @@ def selection_probabilities(graph,  V):
         deg_v=vertex_degree_with_respect_to_V(graph, v, V)
         global_deg+=deg_v
         prob.append(deg_v)
-    
-    prob = [vertex / global_deg for vertex in prob]
+    if global_deg>0:
+        prob = [vertex / global_deg for vertex in prob]
+    else: 
+        prob=None
     return prob
 
 def vertex_with_max_degree_delta(graph, V, delta,U):
@@ -185,7 +187,10 @@ def GRASP(qubit_ranks, graph: list):
     min_crosses=float('inf') 
     optimal_qubit_positions=[]
 
-    for iter in range(0, 50):
+    
+
+    for iter in range(0, 75):
+
         # set all qubit positions to zero 
         qubit_positions=[[],[]]
         V=[]
@@ -222,9 +227,12 @@ def GRASP(qubit_ranks, graph: list):
         for v in V: 
             U.append(v) 
 
-
+  
         prob=selection_probabilities(graph, U)
-
+        if prob==None: 
+            print('returning none')
+            qubit_positions=rank_to_layers(qubit_ranks)
+            return qubit_positions
         sampled_indices = np.random.choice(len(prob), size=len(prob), replace=False, p=prob)
         for vertex in sampled_indices: 
             # get barycenter with respect to apposing layer 
@@ -239,12 +247,11 @@ def GRASP(qubit_ranks, graph: list):
 
         current_crosses=count_crossings_subgraph(graph, qubit_ranks,U, to_dict(qubit_positions))
 
-        if current_crosses-current_crosses_pre>=0:
-            print(current_crosses-current_crosses_pre)
+        # print(current_crosses_pre,current_crosses)
         if current_crosses < min_crosses:
             min_crosses = current_crosses
             optimal_qubit_positions = [list(layer) for layer in qubit_positions]  # Make a deep copy of the positions
 
 
-
+    
     return to_dict(optimal_qubit_positions)
