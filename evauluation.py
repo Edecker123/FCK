@@ -73,18 +73,30 @@ class CCircuit():
         return gates
 
 import os 
+import pandas as pd
+
+data = {
+    "File": [],
+    "Max Fidelity": [],
+    "Min Fidelity": [],
+    "Max 2QPulse": [],
+    "Min 2QPulse": [],
+    "Max 2q_gates": [],
+    "Min 2q_gates": []
+}
 
 qasm_dir = 'qasm_files'
 qasm_files = [f for f in os.listdir(qasm_dir) if f.endswith('.qasm')]
+
 for qasm_file in qasm_files:
     file_path = os.path.join(qasm_dir, qasm_file)
-    
-    # Initialize lists to store the results of each property for 30 iterations
+    print(file_path)
+    # Initialize lists to store the results of each property for iterations
     fidelities = []
     qpulses = []
     qgates = []
     
-    for i in range(30):
+    for i in range(1):
         circuit = CCircuit(file_path)
         fidelities.append(circuit.get_Fidelity())
         qpulses.append(circuit.get_2QPulse())
@@ -98,8 +110,20 @@ for qasm_file in qasm_files:
     max_qgates = max(qgates)
     min_qgates = min(qgates)
     
-    # Print the maximum and minimum values for each file
-    print(f"File: {qasm_file}")
-    print(f"  Fidelity: Max = {max_fidelity}, Min = {min_fidelity}")
-    print(f"  2QPulse: Max = {max_qpulse}, Min = {min_qpulse}")
-    print(f"  2q_gates: Max = {max_qgates}, Min = {min_qgates}")
+    # Append results to data dictionary
+    data["File"].append(qasm_file)
+    data["Max Fidelity"].append(max_fidelity)
+    data["Min Fidelity"].append(min_fidelity)
+    data["Max 2QPulse"].append(max_qpulse)
+    data["Min 2QPulse"].append(min_qpulse)
+    data["Max 2q_gates"].append(max_qgates)
+    data["Min 2q_gates"].append(min_qgates)
+
+# Convert the data dictionary to a DataFrame
+df = pd.DataFrame(data)
+
+# Define the file name for the Excel file
+excel_file = "qasm_analysis.xlsx"
+
+# Export the DataFrame to an Excel file
+df.to_excel(excel_file, index=False)

@@ -189,7 +189,7 @@ def GRASP(qubit_ranks, graph: list):
 
     
 
-    for iter in range(0, 75):
+    for iter in range(0, 30):
 
         # set all qubit positions to zero 
         qubit_positions=[[],[]]
