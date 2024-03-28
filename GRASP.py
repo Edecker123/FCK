@@ -35,6 +35,8 @@ def selection_probabilities(graph,  V):
     for v in V: 
         deg_v=vertex_degree_with_respect_to_V(graph, v, V)
         global_deg+=deg_v
+        if deg_v<=0:
+            return None
         prob.append(deg_v)
     if global_deg>0:
         prob = [vertex / global_deg for vertex in prob]
@@ -229,6 +231,7 @@ def GRASP(qubit_ranks, graph: list):
 
   
         prob=selection_probabilities(graph, U)
+        # draw_layers_ordered(graph, [to_dict(qubit_positions)[0], to_dict(qubit_positions)[1]])
         if prob==None: 
             print('returning none')
             qubit_positions=rank_to_layers(qubit_ranks)

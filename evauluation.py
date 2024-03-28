@@ -9,7 +9,9 @@ from GRASP import *
 import networkx as nx
 from maxcut_master.maxcut._solvers import _sdp
 import numpy as np
-
+import os 
+import pandas as pd
+from fold import *
 
 def has_more_than_one_number(lst):
     return len(set(lst)) > 1
@@ -31,7 +33,6 @@ class CCircuit():
         circuit_dag=qasm_to_dag_two_qubit_only(qasm_file)
         layers_raw=extract_parallel_layers(circuit_dag)
         circuit=get_2q_layers(layers_raw)
-        self.optimizedSchedule=len(circuit)
         self.graph=list_to_undirected_graph(circuit) 
 
         sdp_cut=_sdp.MaxCutSDP(nx.from_numpy_array(np.array(self.graph)))
@@ -41,18 +42,32 @@ class CCircuit():
         self.qubitRanks=[0 if x == -1 else 1 for x in self.qubitRanks]
 
         self.qubitPositions=GRASP(self.qubitRanks, self.graph)
-        self.qubitPositions={0:self.qubitPositions[0], 1:self.qubitPositions[1]}
+        if len(self.qubitPositions)>1:
+            self.qubitPositions={0:self.qubitPositions[0], 1:self.qubitPositions[1]}
 
+        draw_layers_ordered(self.graph, [self.qubitPositions[0],self.qubitPositions[1]])
         self.schedule=schedule(circuit, self.qubitPositions,self.qubitRanks)
 
+        unique_list=find_popular_pairs_sorted(self.schedule)
+        ranks=assign_vertex_ranks(unique_list,6, self.qubitRanks)
+        self.qubitPositions=update_graph_ranks(self.qubitPositions, ranks)
+        layer_pos=[]
+        for i in self.qubitPositions:
+            layer_pos.append(self.qubitPositions[i])
+        for layer in self.schedule: 
+            if len(layer)>1:
+                draw_circuit_layers(self.graph, layer_pos, layer)
+        # draw_layers_ordered(self.graph, layer_pos)
+
+        
     def get_2QPulse(self): 
         return len(self.schedule)
 
     def get_Fidelity(self): 
-        f2=.999
+        f2=.995
         f1=.9999
-        N=len(self.qubitRanks)
         min_len=float('inf')
+        N=len(self.qubitRanks)
         for pos in self.qubitPositions:
             if len(self.qubitPositions[pos])<min_len:
                 min_len=len(self.qubitPositions[pos])
@@ -60,7 +75,7 @@ class CCircuit():
         Tr=1
         for layer in self.schedule:
             F2*=(1-(1-f2)/2)**(len(layer)+min_len)
-            Tr*=math.exp(-.0003*math.sqrt(1/5)*N)
+            Tr*=math.exp(-.000232379*N)
 
         F1=f1**(self.oneQ)
 
@@ -71,9 +86,6 @@ class CCircuit():
         for layer in self.schedule:
             gates+=len(layer)
         return gates
-
-import os 
-import pandas as pd
 
 data = {
     "File": [],
@@ -87,7 +99,7 @@ data = {
 
 qasm_dir = 'qasm_files'
 qasm_files = [f for f in os.listdir(qasm_dir) if f.endswith('.qasm')]
-
+qasm_files=[qasm_files[18]]
 for qasm_file in qasm_files:
     file_path = os.path.join(qasm_dir, qasm_file)
     print(file_path)
@@ -123,7 +135,7 @@ for qasm_file in qasm_files:
 df = pd.DataFrame(data)
 
 # Define the file name for the Excel file
-excel_file = "qasm_analysis.xlsx"
+# excel_file = "qasm_analysis.xlsx"
 
 # Export the DataFrame to an Excel file
-df.to_excel(excel_file, index=False)
+# df.to_excel(excel_file, index=False)
