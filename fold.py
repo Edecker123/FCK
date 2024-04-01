@@ -1,4 +1,4 @@
-
+from scheduling import *
 
 def find_popular_pairs_sorted(schedule):
     # Dictionary to count the frequency of each pair
@@ -58,7 +58,9 @@ def assign_vertex_ranks(pairs, n, original_ranks):
 
     # Combine the ranks into one dictionary
     ranks = {**top_ranks, **bottom_ranks}
-    return ranks
+    min_rank = min(ranks.values())
+    normalized_ranks = {vertex: rank - min_rank for vertex, rank in ranks.items()}
+    return normalized_ranks
 
 
 def update_graph_ranks(graph, ranks):
@@ -86,3 +88,105 @@ def update_graph_ranks(graph, ranks):
         updated_graph[rank][vertex] = len(updated_graph[rank])
 
     return updated_graph
+
+def can_add_edge_multidimensional(new_edge, group,positions, ranks): 
+    # Check if the new edge can be added to the existing group without causing any crossings
+    if ranks[new_edge[0]]==ranks[new_edge[1]]:
+            return False
+    
+    #ordering for comparison
+    if ranks[new_edge[0]]>ranks[new_edge[1]]:
+        new_edge=[new_edge[1],new_edge[0]]
+
+    for edge in group:
+        if ranks[edge[0]]>ranks[edge[1]]:
+            edge=[edge[1],edge[0]]
+
+        #condition 1 is if the edge already in the group goes from same rank to same rank 
+        if ranks[edge[0]]==ranks[edge[1]]:
+            return False
+        
+        #condition 2 is if the edges go to different layers 
+        if sorted([ranks[new_edge[0]], ranks[new_edge[1]]])!= sorted([ranks[edge[0]], ranks[edge[1]]]):
+            return False
+        
+        #condition 3 is if these edges cross 
+        if cross_check(positions,[new_edge, edge] ,ranks) == 0:
+            return False  # Edges cross, cannot add the new edge to this group
+    return True  # No crossing, the new edge can be added
+
+def greedy_layer_merge_multidimensional(edges, positions, ranks): 
+    """Takes in a layer of a circuit, the positions of a 2 layer graph and the ranks of the qubits. 
+        First it creates an empty set of group containers which holds edges that can be executed in paralell. 
+        For each edge in the layer, there are cases which decide if we can add an edge to a group or not:
+        1. If the edge is from same layer to same layer then it must be serialized 
+        2. If a group has an edge with the above condition you may not add any edges to the group 
+        3. If the edge crosses with another edge in the group, you may not add
+    """
+    groups = [[]]  # Initialize list of groups
+    if len(edges)==0:
+        print('f')
+    # Modified part: Just declare an empty list, as we don't place an edge immediately
+    for edge in edges:
+        if ranks[edge[0]] == ranks[edge[1]]:
+            groups.append([[edge[0], edge[1]]])
+            continue
+        if ranks[edge[0]] > ranks[edge[1]]:
+            edge = [edge[1], edge[0]]
+
+        placed = False
+        for group in groups:
+            if can_add_edge_multidimensional(edge, group, positions, ranks):
+                group.append(edge)  # Add edge to the group
+                placed = True
+                break
+
+        if not placed:
+            groups.append([edge])  # Create a new group with the edge
+
+        groups=sort_groups(groups)
+    # Remove empty groups
+    groups = [group for group in groups if group]
+
+    # Find the largest group
+
+    largest_group = max(groups, key=len)
+
+    # Collect all edges not in the largest group
+    leftover_edges = [edge for group in groups for edge in group if group != largest_group]
+
+    return [largest_group, leftover_edges]
+
+def multi_dimension_schedule(layers, positions, ranks): 
+    circuit_layered=[]
+    while len(layers)>0:
+        toplayer=layers.pop(0)
+        if len(toplayer)==0:
+            print('f')
+        split_layers=greedy_layer_merge_multidimensional(toplayer,positions, ranks)
+        circuit_layered.append(split_layers[0])
+
+        if len(split_layers[1])>0 and len(layers)>1:
+            current_layer=layers.pop(0)
+            new_layer, next_layer=merge_layers(split_layers[1], current_layer)
+            if len(next_layer)>0:
+                layers.insert(0, next_layer)
+            layers.insert(0,new_layer) 
+        elif len(split_layers[1])>0 and len(layers)==0:
+            layers.append(split_layers[1])
+
+    return circuit_layered
+
+def split_dimensions(qubitPositions, qubitRanks, original_schedule,device_dimensions,circuit):
+    #get most popular pairs 
+    high_frequency_gates=find_popular_pairs_sorted(original_schedule)
+
+    #get the new ranks for expanding graph
+    ranks=assign_vertex_ranks(high_frequency_gates,device_dimensions, qubitRanks)
+
+    #update graph
+    expanded_graph=update_graph_ranks(qubitPositions, ranks)
+
+    #generate new schedule
+    new_schedule=multi_dimension_schedule(circuit, expanded_graph,ranks)
+    return expanded_graph,new_schedule,ranks

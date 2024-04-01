@@ -53,13 +53,13 @@ def extract_parallel_2q_gate_layers(qasm_file_path):
     return layers
 
 
-def cross_check(positions, edges): 
+def cross_check(positions, edges,ranks): 
     edge0=edges[0]
     edge1=edges[1]
 
-    if positions[0][edge0[0]]<positions[0][edge1[0]]and positions[1][edge0[1]]>positions[1][edge1[1]]: 
+    if positions[ranks[edge0[0]]][edge0[0]]<positions[ranks[edge1[0]]][edge1[0]]and positions[ranks[edge0[1]]][edge0[1]]>positions[ranks[edge1[1]]][edge1[1]]: 
         return 0
-    if positions[0][edge0[0]]>positions[0][edge1[0]] and positions[1][edge0[1]]<positions[1][edge1[1]]:
+    if positions[ranks[edge0[0]]][edge0[0]]>positions[ranks[edge1[0]]][edge1[0]] and positions[ranks[edge0[1]]][edge0[1]]<positions[ranks[edge1[1]]][edge1[1]]:
         return 0
     else: 
         return 1
@@ -69,6 +69,7 @@ def can_add_edge_to_group(new_edge, group, positions,ranks):
     if ranks[new_edge[0]]==ranks[new_edge[1]]:
             return False
     
+    #ordering for comparison
     if ranks[new_edge[0]]>ranks[new_edge[1]]:
         new_edge=[new_edge[1],new_edge[0]]
 
@@ -76,9 +77,12 @@ def can_add_edge_to_group(new_edge, group, positions,ranks):
         if ranks[edge[0]]>ranks[edge[1]]:
             edge=[edge[1],edge[0]]
 
+        #condition 1 is if the edge already in the group goes from same rank to same rank 
         if ranks[edge[0]]==ranks[edge[1]]:
             return False
-        if cross_check(positions,[new_edge, edge] ) == 0:
+        
+        #condition 2 is if these edges cross 
+        if cross_check(positions,[new_edge, edge],ranks) == 0:
             return False  # Edges cross, cannot add the new edge to this group
     return True  # No crossing, the new edge can be added
 
@@ -114,6 +118,13 @@ def sort_groups(groups):
     return sorted(groups, key=len)
 
 def greedy_layer_merge(edges, positions, ranks):
+    """Takes in a layer of a circuit, the positions of a 2 layer graph and the ranks of the qubits. 
+        First it creates an empty set of group containers which holds edges that can be executed in paralell. 
+        For each edge in the layer, there are cases which decide if we can add an edge to a group or not:
+        1. If the edge is from same layer to same layer then it must be serialized 
+        2. If a group has an edge with the above condition you may not add any edges to the group 
+        3. If the edge crosses with another edge in the group, you may not add
+    """
     groups = [[]]  # Initialize list of groups
 
     # Modified part: Just declare an empty list, as we don't place an edge immediately

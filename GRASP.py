@@ -201,7 +201,7 @@ def GRASP(qubit_ranks, graph: list):
         U=[i for i in range(0, len(graph))]
 
         # choose and place vertex at random with max degree 
-        initial_vertex=vertex_with_max_degree_delta(graph,V, 1,U) 
+        initial_vertex=vertex_with_max_degree_delta(graph,U, 1,U) 
 
         U.remove(initial_vertex) 
         V.append(initial_vertex)

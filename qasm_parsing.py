@@ -144,7 +144,7 @@ def transpile_to_cz_u3(qasm_file_path, output_file_path):
     basis_gates = ['u3', 'cz']
     
     # Transpile the circuit
-    transpiled_circuit = transpile(circuit, basis_gates=basis_gates,optimization_level=3)
+    transpiled_circuit = transpile(circuit, basis_gates=basis_gates,optimization_level=1)
     
     # Write the transpiled circuit to a new QASM file
     transpiled_circuit.qasm(filename=output_file_path)
