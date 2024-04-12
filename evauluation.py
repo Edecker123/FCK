@@ -20,7 +20,6 @@ def has_more_than_one_number(lst):
 
 class CCircuit():
     def __init__(self, qasm_file,dimensions=None):
-        # basis_qasm=transpile_to_cz_u3(qasm_file, qasm_file) 
         self.schedule=[]
         self.pulseCount=0
         self.trapTransfer=0
@@ -87,24 +86,21 @@ class CCircuit():
         N=len(self.qubitRanks)
         F2=1
         Tr=1
-
-        layer_loaded=None
+        T_o=300*(10**-6) #s
+        D_o=50*(10**-6) #m
+        D_i=30*(10**-6) #m 
+        T_2=1.5 #s 
+        
         for layer in self.schedule:
-            pair0=layer[0]
+            # load qubit set one 
+            #load qubit set two 
+            #pulse 
+            #unload set one 
+            #unload set two 
 
-            #neither layer interacting has its layer in the interaction zone 
-            if self.qubitRanks[pair0[0]]!=layer_loaded or self.qubitRanks[pair0[1]]!=layer_loaded: 
-                Tr*=math.exp(-.000232379*N) #load layer 
-                rank0_length=len(self.qubitPositions[self.qubitRanks[pair0[0]]])
-                rank1_length=len(self.qubitPositions[self.qubitRanks[pair0[1]]])
-                
-                if rank0_length<rank1_length:
-                    layer_loaded=self.qubitRanks[pair0[0]]
-                else:
-                    layer_loaded=self.qubitRanks[pair0[1]]
-
-            F2*=(1-(1-f2)/2)**(len(layer)+len(self.qubitPositions[layer_loaded]))
-            Tr*=math.exp(-.000232379*N)
+            Tr*=math.exp(-((T_o * math.sqrt(D_i/D_o))/T_2))
+            F2*=(1-(1-f2)/2)**(len(layer)*2)
+            Tr*=math.exp(-((T_o * math.sqrt(D_i/D_o))/T_2))
 
         F1=f1**(self.oneQ)
 
@@ -116,7 +112,13 @@ class CCircuit():
             gates+=len(layer)
         return gates
 
-data = {
+
+
+qasm_dir = 'qasm_files'
+qasm_files = [f for f in os.listdir(qasm_dir) if f.endswith('.qasm')]
+for size in [3,10,25,55]:
+
+    data = {
     "File": [],
     "Max Fidelity": [],
     "Min Fidelity": [],
@@ -124,48 +126,45 @@ data = {
     "Min 2QPulse": [],
     "Max 2q_gates": [],
     "Min 2q_gates": []
-}
+    }
 
-qasm_dir = 'qasm_files'
-qasm_files = [f for f in os.listdir(qasm_dir) if f.endswith('.qasm')]
-for qasm_file in qasm_files:
-    file_path = os.path.join(qasm_dir, qasm_file)
-    print(file_path)
-    # transpile_to_cz_u3(file_path,file_path)
-    # Initialize lists to store the results of each property for iterations
-    fidelities = []
-    qpulses = []
-    qgates = []
-    
-    for i in range(30):
-        print(i)
-        circuit = CCircuit(file_path,10)
-        fidelities.append(circuit.get_Fidelity2())
-        qpulses.append(circuit.get_2QPulse())
-        qgates.append(circuit.get_2q_gates())
-    
-    # Calculate the maximum and minimum for each property
-    max_fidelity = max(fidelities)
-    min_fidelity = min(fidelities)
-    max_qpulse = max(qpulses)
-    min_qpulse = min(qpulses)
-    max_qgates = max(qgates)
-    min_qgates = min(qgates)
-    
-    # Append results to data dictionary
-    data["File"].append(qasm_file)
-    data["Max Fidelity"].append(max_fidelity)
-    data["Min Fidelity"].append(min_fidelity)
-    data["Max 2QPulse"].append(max_qpulse)
-    data["Min 2QPulse"].append(min_qpulse)
-    data["Max 2q_gates"].append(max_qgates)
-    data["Min 2q_gates"].append(min_qgates)
+    for qasm_file in qasm_files:
+        file_path = os.path.join(qasm_dir, qasm_file)
+        print(file_path)
+        # transpile_to_cz_u3(file_path,file_path)
+        # Initialize lists to store the results of each property for iterations
+        fidelities = []
+        qpulses = []
+        qgates = []
+        for i in range(1):
+            print(i)
+            circuit = CCircuit(file_path)
+            fidelities.append(circuit.get_Fidelity2())
+            qpulses.append(circuit.get_2QPulse())
+            qgates.append(circuit.get_2q_gates())
+        
+        # Calculate the maximum and minimum for each property
+        max_fidelity = max(fidelities)
+        min_fidelity = min(fidelities)
+        max_qpulse = max(qpulses)
+        min_qpulse = min(qpulses)
+        max_qgates = max(qgates)
+        min_qgates = min(qgates)
+        
+        # Append results to data dictionary
+        data["File"].append(qasm_file)
+        data["Max Fidelity"].append(max_fidelity)
+        data["Min Fidelity"].append(min_fidelity)
+        data["Max 2QPulse"].append(max_qpulse)
+        data["Min 2QPulse"].append(min_qpulse)
+        data["Max 2q_gates"].append(max_qgates)
+        data["Min 2q_gates"].append(min_qgates)
 
-# Convert the data dictionary to a DataFrame
-df = pd.DataFrame(data)
+    # Convert the data dictionary to a DataFrame
+    df = pd.DataFrame(data)
 
-# Define the file name for the Excel file
-excel_file = "qasm_analysis_10.xlsx"
+    # Define the file name for the Excel file
+    excel_file = "qasm_analysis_" + str(size) + "_trap_transfer.xlsx"
 
-# Export the DataFrame to an Excel file
-df.to_excel(excel_file, index=False)
+    # Export the DataFrame to an Excel file
+    df.to_excel(excel_file, index=False)

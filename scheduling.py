@@ -205,8 +205,6 @@ def schedule(layers,  positions, ranks):
 
     return circuit_layered
 
-def check_schedule(layers,schedule): 
-    pass
 
 
 
