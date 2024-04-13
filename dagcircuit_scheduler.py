@@ -83,16 +83,19 @@ def get_2q_layers(layers):
         layer_int=[]
         for operation in layer:
             try:
+                op=operation.name
                 pair=[]
                 for qubit in operation.qargs:
                     pair.append(qubit.index)
                 layer_int.append(pair)
+           
             except:
                 pass
         if len(layer_int)>0:
             layer_return.append(layer_int)
 
     return layer_return
+
 
 def verify_layers(dag, layers):
     # Step 1: Verify that operations in the same layer are parallelizable.

@@ -81,7 +81,7 @@ class CCircuit():
         return Tr*F2*F1
     
     def get_Fidelity2(self): 
-        f2=.999
+        f2=.994
         f1=.9999
         N=len(self.qubitRanks)
         F2=1
@@ -98,9 +98,9 @@ class CCircuit():
             #unload set one 
             #unload set two 
 
-            Tr*=math.exp(-((T_o * math.sqrt(D_i/D_o))/T_2))
+            Tr*=math.exp(-((T_o * math.sqrt(D_i/D_o))/T_2)*N)
             F2*=(1-(1-f2)/2)**(len(layer)*2)
-            Tr*=math.exp(-((T_o * math.sqrt(D_i/D_o))/T_2))
+            Tr*=math.exp(-((T_o * math.sqrt(D_i/D_o))/T_2)*N)
 
         F1=f1**(self.oneQ)
 
@@ -136,9 +136,9 @@ for size in [3,10,25,55]:
         fidelities = []
         qpulses = []
         qgates = []
-        for i in range(1):
+        for i in range(5):
             print(i)
-            circuit = CCircuit(file_path)
+            circuit = CCircuit(file_path,size)
             fidelities.append(circuit.get_Fidelity2())
             qpulses.append(circuit.get_2QPulse())
             qgates.append(circuit.get_2q_gates())

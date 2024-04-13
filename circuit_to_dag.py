@@ -56,5 +56,15 @@ def qasm_to_dag(filepath):
     # Convert the quantum circuit to a DAG
     dag = circuit_to_dag(qc)
     
+    # Create a new empty DAG for the filtered circuit
+    filtered_dag = dag._copy_circuit_metadata()
+
+    # Iterate over the nodes in the original DAG
+    for node in dag.topological_op_nodes():
+        # Check if the node is a two-qubit gate by examining the number of qubits it acts on
+        if len(node.qargs) >=1:
+            # Add the node to the filtered DAG
+            filtered_dag.apply_operation_back(node.op, qargs=node.qargs, cargs=node.cargs)
+    
     # The function returns the filtered DAG object for further manipulation if required
-    return dag
+    return filtered_dag

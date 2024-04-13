@@ -14,23 +14,24 @@ import math
 from circuit_to_dag import *
 from dagcircuit_scheduler import *
 
-def get_FAA_fidelity(sing_count, syc_count,schedule,num_qubits): 
-    f1=.999
-    f2=.994
+def get_FAA_fidelity(sx,rx,iswap,schedule,num_qubits): 
 
+    #system parameters
+    f1=.9999
+    f2=.994
     T1=(15*(10**-6))
     T2=(25*(10**-6))
-    
     G1T=25*(10**-9)
     G2T=15*(10**-9)
-
-    F1=f1**sing_count
-    F2=f2**syc_count
+    F1=f1**(sx+rx)
+    F2=f2**iswap
+    time_fidelity=1
 
     '''get layers that are executed in paralell. After the schedule 
     has been determined, find the amount of layers each qubit is idle for.
     After gaining this information, most likley in a hash, convert layer count
     to time for each qubit and then preform a product loop.'''
+
     qubit_times={}
     for qubit in range(num_qubits):
         qubit_times[qubit]=0
@@ -41,7 +42,14 @@ def get_FAA_fidelity(sing_count, syc_count,schedule,num_qubits):
         for gate in layer: 
             for qubit in gate:
                 qubit_times[qubit]-=1
-            
+
+    for qubit in qubit_times:
+        if qubit_times[qubit]!=len(schedule):
+            time_fidelity*=(1-1/3*(1/T1 + 1/T2)*qubit_times[qubit]*G1T)
+    
+    fidelity=F1*F2*time_fidelity
+
+    return fidelity
 def coupling_to_adjacency(coupling_list):
     """Convert a coupling list into an adjacency list."""
     adjacency_list = {}
@@ -117,7 +125,7 @@ def transpile_and_get_statistics(filename, schedule, conn,op_lvl=3,basis=0):
     if basis==0: 
         basis_gate=['u3','cz']
     elif basis==1:
-        basis_gate=['u3','cz','swap']
+        basis_gate=['rz', 'sx','cx']
    # Generate coupling list from connection
     c_list = generate_coupling_list(conn)
 
@@ -127,23 +135,23 @@ def transpile_and_get_statistics(filename, schedule, conn,op_lvl=3,basis=0):
 
     # Load circuit from QASM file and transpile for the custom topology
     circuit = QuantumCircuit.from_qasm_file(filename)
-    optimized_circuit = transpile(circuit, coupling_map=c_map, optimization_level=op_lvl, backend=back, basis_gates=basis_gate)
+    optimized_circuit = transpile(circuit, coupling_map=c_map, optimization_level=op_lvl, basis_gates=basis_gate)
 
    # Get gate counts
     gate_counts = optimized_circuit.count_ops()
 
     qubit_count=optimized_circuit.num_qubits
     # Print statistics
-    u3_count = gate_counts.get('u3', 0) 
-    # print(f"Number of u3 gates: {u3_count}")
+    rx_count = gate_counts.get('rz', 0) 
+    sx_count = gate_counts.get('sx', 0)
 
-    cz_count = gate_counts.get('cz', 0)
+    cx_count = gate_counts.get('cx', 0)
     # print(f"Number of cz gates: {cz_count}")
 
     # get fidelity
-    fidelity=get_FAA_fidelity(u3_count, cz_count,schedule,qubit_count)
+    fidelity=get_FAA_fidelity(sx_count, rx_count, cx_count,schedule,qubit_count)
 
-    return [cz_count,fidelity,optimized_circuit]
+    return [cx_count,fidelity,optimized_circuit]
 
 data = {
     "File": [],
@@ -152,6 +160,7 @@ data = {
     "Max FAA gates": [],
     "Min FAA gates": []
 }
+
 s_conn, s_pos=square_grid(10,10)
 qasm_dir = 'qasm_files'
 qasm_files = [f for f in os.listdir(qasm_dir) if f.endswith('.qasm')]
@@ -165,11 +174,12 @@ for qasm_file in qasm_files:
     qpulses = []
     qgates = []
     
-    for i in range(3):
+    for i in range(5):
         print(i)
         circuit_dag=qasm_to_dag(file_path)
         layers_raw=extract_parallel_layers(circuit_dag)
-        data_function=transpile_and_get_statistics(file_path,layers_raw, coupling_to_adjacency(s_conn), 3, 0)
+        circuit=get_2q_layers(layers_raw)
+        data_function=transpile_and_get_statistics(file_path,circuit, coupling_to_adjacency(s_conn), 3, 1)
         fidelities.append(data_function[1])
         qgates.append(data_function[0])
     
