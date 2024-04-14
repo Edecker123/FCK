@@ -174,7 +174,7 @@ for qasm_file in qasm_files:
     qpulses = []
     qgates = []
     
-    for i in range(5):
+    for i in range(30):
         print(i)
         circuit_dag=qasm_to_dag(file_path)
         layers_raw=extract_parallel_layers(circuit_dag)

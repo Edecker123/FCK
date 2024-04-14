@@ -136,7 +136,7 @@ for size in [3,10,25,55]:
         fidelities = []
         qpulses = []
         qgates = []
-        for i in range(5):
+        for i in range(30):
             print(i)
             circuit = CCircuit(file_path,size)
             fidelities.append(circuit.get_Fidelity2())
