@@ -116,7 +116,7 @@ class CCircuit():
 
 qasm_dir = 'qasm_files'
 qasm_files = [f for f in os.listdir(qasm_dir) if f.endswith('.qasm')]
-for size in [3,10,25,55]:
+for size in [55]:
 
     data = {
     "File": [],
