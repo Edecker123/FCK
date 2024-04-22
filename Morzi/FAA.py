@@ -1,16 +1,12 @@
 from qiskit.transpiler import CouplingMap
-from qiskit import QuantumCircuit, Aer, transpile,execute
-from qiskit.converters import circuit_to_dag
+from qiskit import QuantumCircuit, Aer, transpile
 from qiskit.transpiler import CouplingMap
 from qiskit import QuantumCircuit
 from qiskit.transpiler import CouplingMap
 from compile_transpile_helper import *
-from qiskit_aer.noise import NoiseModel
-import qiskit_aer.noise as noise
 from compile_transpile_helper import *
 import os 
 import pandas as pd 
-import math 
 from circuit_to_dag import *
 from dagcircuit_scheduler import *
 

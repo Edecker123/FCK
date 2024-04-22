@@ -115,7 +115,7 @@ class CCircuit():
 
 
 
-qasm_dir = 'qasm_files'
+qasm_dir = 'Morzi/qasm_files'
 qasm_files = [f for f in os.listdir(qasm_dir) if f.endswith('.qasm')]
 qasm_files=[qasm_files[13]]
 for size in [3]:

@@ -39,6 +39,7 @@ def qasm_to_dag_two_qubit_only(filepath):
     # Create a new empty DAG for the filtered circuit
     filtered_dag = dag._copy_circuit_metadata()
 
+
     # Iterate over the nodes in the original DAG
     for node in dag.topological_op_nodes():
         # Check if the node is a two-qubit gate by examining the number of qubits it acts on

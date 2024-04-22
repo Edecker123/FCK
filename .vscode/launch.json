@@ -2,11 +2,30 @@
     "version": "0.2.0",
     "configurations": [
         {
+            "name": "Morzi base eval debug",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/Morzi/evaluation.py",
+            "console": "integratedTerminal"
+        },
+        {
             "name": "Debug ISCA arb",
             "type": "python",
             "request": "launch",
             "program": "${workspaceFolder}/fpqa_revision_AE/run.py",
-            "args": ["fpqa_revision_AE/configs/13_isca_maintable/arb/fpqac.yml"],
+            "args": [
+                "fpqa_revision_AE/configs/13_isca_maintable/arb/fpqac.yml"
+            ],
+            "console": "integratedTerminal"
+        },
+        {
+            "name": "Debug data collect",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/fpqa_data_collect.py",
+            "args": [
+                "fpqa_revision_AE/configs/13_isca_maintable/arb/fpqac.yml"
+            ],
             "console": "integratedTerminal"
         }
     ]
