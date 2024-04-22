@@ -9,7 +9,7 @@ from time import time
 import numpy as np
 from qiskit import transpile
 from qiskit.converters import circuit_to_dag
-from qiskit.providers.fake_provider.fake_pulse_backend import FakePulseBackend
+from qiskit.providers.fake_provider.fake_qasm_backend import FakeQasmBackend
 
 # from compilers.FAATriangular.code.gen_qasm import geyser
 
@@ -33,10 +33,10 @@ def get_n2q_interation_stats(circ):
     gates = []
     for node in dag.topological_op_nodes():
         if node.op.num_qubits == 2:
-            gate_2q = list(map(lambda x: x.index, node.qargs))
+            gate_2q = list(map(lambda x: x._index, node.qargs))
             gates.append(gate_2q)
         else:
-            gates_1q.append(node.qargs[0].index)
+            gates_1q.append(node.qargs[0]._index)
 
     stats = {}
     stats["num_qubits"] = circ.num_qubits
@@ -128,7 +128,7 @@ def get_p2v_mapping(circ):
 
 def compile_backend(circ, compiler="qiskit", max_col=16, max_row=16, opt=3, cmap=None):
     if compiler == "qiskit":
-        backend = FakePulseBackend()
+        backend = FakeQasmBackend()
         if cmap is None:
             cmap = backend.configuration().coupling_map
         basis_gates = ["u3", "cx", "id"]

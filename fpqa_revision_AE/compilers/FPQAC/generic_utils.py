@@ -39,9 +39,9 @@ def get_p2v(circ):
         p2v = {}
         for p, v in p2v_orig.items():
             if v.register.name == "q":
-                p2v[p] = v.index
+                p2v[p] = v._index
             else:
-                p2v[p] = f"{v.register.name}.{v.index}"
+                p2v[p] = f"{v.register.name}.{v._index}"
     else:
         p2v = {}
         for p in range(circ.num_qubits):
@@ -53,7 +53,7 @@ def get_all_2q_gates(circ):
     # obtain all the 2-Q gate in the input circuit
     all_2q_gates = []
     for gate in circ.data:
-        wires = list(map(lambda x: x.index, gate[1]))
+        wires = list(map(lambda x: x._index, gate[1]))
         if len(wires) == 2:
             if wires[0] > wires[1]:
                 all_2q_gates.append((wires[1], wires[0]))
@@ -941,7 +941,7 @@ class CompilerLogger(object):
                     dag.remove_op_node(node)
                     num_1q_gates += 1
                     add_layer_1 = True
-                    data_1q_source.append(self.qubitidx2Position(node.qargs[0].index))
+                    data_1q_source.append(self.qubitidx2Position(node.qargs[0]._index))
 
             if add_layer_1:
                 self.gate_1Q(data_1q_source)
@@ -955,7 +955,7 @@ class CompilerLogger(object):
             for node in front_layer:
                 if node.op.num_qubits == 2:
                     nodes_this_layer.append(node)
-                    gate_2q = list(map(lambda x: x.index, node.qargs))
+                    gate_2q = list(map(lambda x: x._index, node.qargs))
                     if gate_2q[0] > gate_2q[1]:
                         gate_2q = [gate_2q[1], gate_2q[0]]
                     gates_this_layer.append(gate_2q)
@@ -1145,7 +1145,7 @@ def compiler_log(circ, n_rows, n_cols, n_aods, pos, occ, backend_config):
                 dag.remove_op_node(node)
                 num_1q_gates += 1
                 add_layer_1 = True
-                data_1q_source.append({"source": node.qargs[0].index})
+                data_1q_source.append({"source": node.qargs[0]._index})
 
         if add_layer_1:
             info = {
@@ -1166,7 +1166,7 @@ def compiler_log(circ, n_rows, n_cols, n_aods, pos, occ, backend_config):
         for node in front_layer:
             if node.op.num_qubits == 2:
                 nodes_this_layer.append(node)
-                gate_2q = list(map(lambda x: x.index, node.qargs))
+                gate_2q = list(map(lambda x: x._index, node.qargs))
                 if gate_2q[0] > gate_2q[1]:
                     gate_2q = [gate_2q[1], gate_2q[0]]
                 gates_this_layer.append(gate_2q)
@@ -1427,7 +1427,7 @@ if __name__ == "__main__":
     for node in dag.nodes():
         if hasattr(node, "op") and node.op.num_qubits == 2:
             # nodes_this_layer.append(node)
-            gate_2q = list(map(lambda x: x.index, node.qargs))
+            gate_2q = list(map(lambda x: x._index, node.qargs))
             node_2q_gates.append(gate_2q)
             # gates_this_layer.append(gate_2q)
             if gate_2q == [52, 58]:

@@ -4,7 +4,7 @@ import numpy as np
 import yaml
 from qiskit import QuantumCircuit, transpile
 from qiskit.converters import circuit_to_dag
-from qiskit.circuit import Qubit
+
 from compilers.analyzer import Analyzer
 
 from .gen_coupling_map import gen_fpqa_coupling_map
@@ -54,7 +54,7 @@ class FPQACGenericCompiler(object):
 
         for gate in circ:
             if gate[0].num_qubits == 2:
-                qubit_index = [gate[1][0].index, gate[1][1].index]
+                qubit_index = [gate[1][0]._index, gate[1][1]._index]
                 new_circ.append(gate[0], qubit_index)
 
         dag = circuit_to_dag(new_circ)
@@ -62,8 +62,8 @@ class FPQACGenericCompiler(object):
         decay_factor = 1
         for layer in dag.layers():
             for gate in layer["partition"]:
-                q1 = gate[0].index
-                q2 = gate[1].index
+                q1 = gate[0]._index
+                q2 = gate[1]._index
                 matrix[q1][q2] += 1 * decay_factor
                 matrix[q2][q1] += 1 * decay_factor
             decay_factor *= fpqac_generic_partition_factor
@@ -101,7 +101,7 @@ class FPQACGenericCompiler(object):
 
         for gate in circ:
             if gate[0].num_qubits == 2:
-                qubit_index = [gate[1][0].index, gate[1][1].index]
+                qubit_index = [gate[1][0]._index, gate[1][1]._index]
                 new_circ.append(gate[0], qubit_index)
 
         dag = circuit_to_dag(new_circ)
@@ -109,8 +109,8 @@ class FPQACGenericCompiler(object):
         decay_factor = 1
         for layer in dag.layers():
             for gate in layer["partition"]:
-                q1 = gate[0].index
-                q2 = gate[1].index
+                q1 = gate[0]._index
+                q2 = gate[1]._index
                 matrix[q1][q2] += 1 * decay_factor
                 matrix[q2][q1] += 1 * decay_factor
             decay_factor *= fpqac_generic_partition_factor
@@ -193,7 +193,7 @@ class FPQACGenericCompiler(object):
         for i in range(n_qubits):
             unique_2q_gates[i] = {}
         for gate in circ.data:
-            wires = list(map(lambda x: x.index, gate[1]))
+            wires = list(map(lambda x: x._index, gate[1]))
             if len(wires) == 2:
                 n_2q_gates += 1
                 unique_2q_gates[wires[0]][wires[1]] = 1

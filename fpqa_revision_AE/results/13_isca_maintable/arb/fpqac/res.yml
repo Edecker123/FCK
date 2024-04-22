@@ -1,31 +1,31 @@
-- benchmark: benchmarks/algorithm/hhl_n7.qasm
+- benchmark: fpqa_revision_AE/benchmarks/algorithm/hhl_n7.qasm
   circ_stats:
-    avg_move_distance: 0.0002484975259357181
-    avg_move_speed: 0.008041991130605764
-    compilation_time: 2.126396417617798
-    depth: 103
-    each_move_distance_mean: 0.16083982262773064
-    each_move_distance_std: 0.5974380434924969
+    avg_move_distance: 0.0003151675938687732
+    avg_move_speed: 0.010505586462292441
+    compilation_time: 1.4363059997558594
+    depth: 100
+    each_move_distance_mean: 0.21011172926685984
+    each_move_distance_std: 0.7938128088600006
     max_ancilla: 7
-    n_1q_gate: 176
-    n_2q_gate: 116
-    n_2q_layer: 103
+    n_1q_gate: 173
+    n_2q_gate: 113
+    n_2q_layer: 100
     n_cooling: 0
-    n_move: 103
+    n_move: 100
     n_transfer: 0
   fidelity:
-    1q_decoherence: 0.999930669070161
-    1q_gate: 0.9860181042595809
-    1q_total: 0.9859497427075745
-    2q_decoherence: 0.9999582515381582
-    2q_gate: 0.7479919184316836
-    2q_total: 0.7479606909196189
+    1q_decoherence: 0.9999410850688839
+    1q_gate: 0.9862547864727476
+    1q_total: 0.9861966813399397
+    2q_decoherence: 0.9999645339622705
+    2q_gate: 0.7536300248304151
+    2q_total: 0.7536032965595203
     additional_2Q_by_cooling: 1.0
-    additional_2Q_error_by_heating: 0.9952502859835265
-    move_total: 0.9629815466225595
+    additional_2Q_error_by_heating: 0.9913900628353925
+    move_total: 0.9640161640634903
     movement_atomloss: 1.0
-    movement_decoherence: 0.9675772619054529
-    total_fidelity: 0.7101523312155218
+    movement_decoherence: 0.9723883668012443
+    total_fidelity: 0.7164578447390226
     transfer: 1.0
     transfer_decoherence: 1.0
     transfer_total: 1.0
@@ -74,7 +74,7 @@
         name: fpqac_generic
         print_log: false
       count_gates: true
-      result_path: results/13_isca_maintable/arb/fpqac
+      result_path: fpqa_revision_AE/results/13_isca_maintable/arb/fpqac
     cooling_deltaN_thres: 15
     dump_full_report: false
     faa_cmap_bidirect: true
@@ -155,41 +155,41 @@
     na_1Q_fidelity: 0.99992
     na_2Q_fidelity: 0.9975
     na_N_max: 33
-  path: benchmarks/algorithm/hhl_n7.qasm
+  path: fpqa_revision_AE/benchmarks/algorithm/hhl_n7.qasm
   time:
-    1q_gate: 6.500000000000013e-05
-    2q_gate: 3.913999999999998e-05
-    movement: 0.03090000000000008
-    total_time: 0.03100414000000008
+    1q_gate: 6.312500000000012e-05
+    2q_gate: 3.799999999999998e-05
+    movement: 0.030000000000000075
+    total_time: 0.030101125000000076
     transfer: 0.0
-- benchmark: benchmarks/supermarq/supermarq_mermin_bell_n10.qasm
+- benchmark: fpqa_revision_AE/benchmarks/supermarq/supermarq_mermin_bell_n10.qasm
   circ_stats:
-    avg_move_distance: 0.0003075914497751361
-    avg_move_speed: 0.013670731101117162
-    compilation_time: 1.2515838146209717
-    depth: 75
-    each_move_distance_mean: 0.2734146220587984
-    each_move_distance_std: 0.8016094920706577
-    max_ancilla: 10
+    avg_move_distance: 0.00024277332817543767
+    avg_move_speed: 0.010647952990150776
+    compilation_time: 1.0802249908447266
+    depth: 76
+    each_move_distance_mean: 0.21295905983103625
+    each_move_distance_std: 0.6785988447177429
+    max_ancilla: 9
     n_1q_gate: 119
-    n_2q_gate: 102
-    n_2q_layer: 75
+    n_2q_gate: 100
+    n_2q_layer: 76
     n_cooling: 0
-    n_move: 75
+    n_move: 76
     n_transfer: 0
   fidelity:
-    1q_decoherence: 0.9999501262437351
-    1q_gate: 0.9905247945293307
-    1q_total: 0.9904753933371541
-    2q_decoherence: 0.9999601007959935
-    2q_gate: 0.7746691203732715
-    2q_total: 0.7746382116920002
+    1q_decoherence: 0.9999516678347066
+    1q_gate: 0.9905247945293306
+    1q_total: 0.9904769203212342
+    2q_decoherence: 0.9999614940747077
+    2q_gate: 0.7785570395897229
+    2q_total: 0.7785270605305207
     additional_2Q_by_cooling: 1.0
-    additional_2Q_error_by_heating: 0.9922934256089783
-    move_total: 0.9615233555636032
+    additional_2Q_error_by_heating: 0.9948665460394189
+    move_total: 0.9650776877891614
     movement_atomloss: 1.0
-    movement_decoherence: 0.9689909564537413
-    total_fidelity: 0.7377384938457401
+    movement_decoherence: 0.9700574329603829
+    total_fidelity: 0.7441840333862683
     transfer: 1.0
     transfer_decoherence: 1.0
     transfer_total: 1.0
@@ -238,7 +238,7 @@
         name: fpqac_generic
         print_log: false
       count_gates: true
-      result_path: results/13_isca_maintable/arb/fpqac
+      result_path: fpqa_revision_AE/results/13_isca_maintable/arb/fpqac
     cooling_deltaN_thres: 15
     dump_full_report: false
     faa_cmap_bidirect: true
@@ -319,41 +319,41 @@
     na_1Q_fidelity: 0.99992
     na_2Q_fidelity: 0.9975
     na_N_max: 33
-  path: benchmarks/supermarq/supermarq_mermin_bell_n10.qasm
+  path: fpqa_revision_AE/benchmarks/supermarq/supermarq_mermin_bell_n10.qasm
   time:
-    1q_gate: 3.562500000000005e-05
-    2q_gate: 2.8499999999999985e-05
-    movement: 0.022500000000000034
-    total_time: 0.022564125000000036
+    1q_gate: 3.6250000000000054e-05
+    2q_gate: 2.8879999999999984e-05
+    movement: 0.022800000000000036
+    total_time: 0.022865130000000036
     transfer: 0.0
-- benchmark: benchmarks/QASMBench/QV_n32.qasm
+- benchmark: fpqa_revision_AE/benchmarks/QASMBench/QV_n32.qasm
   circ_stats:
-    avg_move_distance: 0.013406349231561292
-    avg_move_speed: 0.0671997455216105
-    compilation_time: 17.37030005455017
-    depth: 665
-    each_move_distance_mean: 1.34399491045242
-    each_move_distance_std: 2.8608358417580146
-    max_ancilla: 22
-    n_1q_gate: 3304
-    n_2q_gate: 1665
-    n_2q_layer: 665
-    n_cooling: 5
-    n_move: 665
+    avg_move_distance: 0.010544286408848807
+    avg_move_speed: 0.058775286559915325
+    compilation_time: 8.143268823623657
+    depth: 598
+    each_move_distance_mean: 1.1755057312179553
+    each_move_distance_std: 2.6105976070819565
+    max_ancilla: 23
+    n_1q_gate: 3240
+    n_2q_gate: 1626
+    n_2q_layer: 598
+    n_cooling: 3
+    n_move: 598
     n_transfer: 0
   fidelity:
-    1q_decoherence: 0.9985026221905005
-    1q_gate: 0.7677197100173485
-    1q_total: 0.7665701435596531
-    2q_decoherence: 0.9990906936698135
-    2q_gate: 0.015487658265396833
-    2q_total: 0.015473575239696342
-    additional_2Q_by_cooling: 0.5765526318293087
-    additional_2Q_error_by_heating: 0.11778344127599073
-    move_total: 0.03311164896663785
-    movement_atomloss: 0.9999261087929083
-    movement_decoherence: 0.48762919903268803
-    total_fidelity: 0.0003927564994030948
+    1q_decoherence: 0.9986282333998209
+    1q_gate: 0.7716606728285412
+    1q_total: 0.7706021344908833
+    2q_decoherence: 0.9991671336925356
+    2q_gate: 0.01707585614257651
+    2q_total: 0.01706163423732425
+    additional_2Q_by_cooling: 0.7079144895174396
+    additional_2Q_error_by_heating: 0.10217275695218032
+    move_total: 0.03746453995245365
+    movement_atomloss: 0.9999617789674241
+    movement_decoherence: 0.5179896591255426
+    total_fidelity: 0.0004925737218510518
     transfer: 1.0
     transfer_decoherence: 1.0
     transfer_total: 1.0
@@ -402,7 +402,7 @@
         name: fpqac_generic
         print_log: false
       count_gates: true
-      result_path: results/13_isca_maintable/arb/fpqac
+      result_path: fpqa_revision_AE/results/13_isca_maintable/arb/fpqac
     cooling_deltaN_thres: 15
     dump_full_report: false
     faa_cmap_bidirect: true
@@ -468,7 +468,7 @@
     n_2q_gates_before_transpilation: 1536
     n_qubits: 32
     original_n_2q_gates: 1488
-    total_overlap: 59
+    total_overlap: 35
   params:
     T_per_move: 0.0003
     atom_distance: 1.4999999999999999e-05
@@ -483,18 +483,18 @@
     na_1Q_fidelity: 0.99992
     na_2Q_fidelity: 0.9975
     na_N_max: 33
-  path: benchmarks/QASMBench/QV_n32.qasm
+  path: fpqa_revision_AE/benchmarks/QASMBench/QV_n32.qasm
   time:
-    1q_gate: 0.00041624999999999356
-    2q_gate: 0.0002526999999999992
-    movement: 0.19949999999999785
-    total_time: 0.20016894999999785
+    1q_gate: 0.00037437499999999526
+    2q_gate: 0.00022723999999999908
+    movement: 0.1793999999999982
+    total_time: 0.1800016149999982
     transfer: 0.0
-- benchmark: benchmarks/QASMBench/bv_n50.qasm
+- benchmark: fpqa_revision_AE/benchmarks/QASMBench/bv_n50.qasm
   circ_stats:
     avg_move_distance: 0.001833172268666693
     avg_move_speed: 0.27775337404040806
-    compilation_time: 0.9542474746704102
+    compilation_time: 0.8044638633728027
     depth: 22
     each_move_distance_mean: 5.555067483333192
     each_move_distance_std: 3.227065621945346
@@ -566,7 +566,7 @@
         name: fpqac_generic
         print_log: false
       count_gates: true
-      result_path: results/13_isca_maintable/arb/fpqac
+      result_path: fpqa_revision_AE/results/13_isca_maintable/arb/fpqac
     cooling_deltaN_thres: 15
     dump_full_report: false
     faa_cmap_bidirect: true
@@ -647,18 +647,18 @@
     na_1Q_fidelity: 0.99992
     na_2Q_fidelity: 0.9975
     na_N_max: 33
-  path: benchmarks/QASMBench/bv_n50.qasm
+  path: fpqa_revision_AE/benchmarks/QASMBench/bv_n50.qasm
   time:
     1q_gate: 1.4375e-05
     2q_gate: 8.359999999999998e-06
     movement: 0.006599999999999999
     total_time: 0.006622734999999999
     transfer: 0.0
-- benchmark: benchmarks/algorithm/bv_n70.qasm
+- benchmark: fpqa_revision_AE/benchmarks/algorithm/bv_n70.qasm
   circ_stats:
     avg_move_distance: 0.0027693988375669587
     avg_move_speed: 0.2564258182932369
-    compilation_time: 0.9549849033355713
+    compilation_time: 1.0647029876708984
     depth: 36
     each_move_distance_mean: 5.128516367289327
     each_move_distance_std: 3.1231195023567446
@@ -730,7 +730,7 @@
         name: fpqac_generic
         print_log: false
       count_gates: true
-      result_path: results/13_isca_maintable/arb/fpqac
+      result_path: fpqa_revision_AE/results/13_isca_maintable/arb/fpqac
     cooling_deltaN_thres: 15
     dump_full_report: false
     faa_cmap_bidirect: true
@@ -811,7 +811,7 @@
     na_1Q_fidelity: 0.99992
     na_2Q_fidelity: 0.9975
     na_N_max: 33
-  path: benchmarks/algorithm/bv_n70.qasm
+  path: fpqa_revision_AE/benchmarks/algorithm/bv_n70.qasm
   time:
     1q_gate: 2.312500000000002e-05
     2q_gate: 1.3679999999999994e-05

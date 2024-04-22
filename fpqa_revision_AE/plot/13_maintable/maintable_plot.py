@@ -2,7 +2,7 @@ import os
 
 import matplotlib.pyplot as plt
 
-from plot.plot_utils import plot_bars, tight_figure
+from plot.plot_utils import *
 
 if __name__ == "__main__":
     fig, ax = plt.subplots(3, 1, figsize=(22, 5))

@@ -1,0 +1,13 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Debug ISCA arb",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/fpqa_revision_AE/run.py",
+            "args": ["fpqa_revision_AE/configs/13_isca_maintable/arb/fpqac.yml"],
+            "console": "integratedTerminal"
+        }
+    ]
+}

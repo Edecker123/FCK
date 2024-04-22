@@ -13,6 +13,7 @@ import os
 import pandas as pd
 from fold import *
 import copy 
+import time 
 
 def has_more_than_one_number(lst):
     return len(set(lst)) > 1
@@ -49,14 +50,14 @@ class CCircuit():
 
         if dimensions!=None:
             self.qubitPositions,self.schedule,self.qubitRanks=split_dimensions(self.qubitPositions, self.qubitRanks,self.schedule,dimensions,copy.deepcopy(circuit))
-        # print(self.schedule)
-        # layer_pos=[]
-        # for i in self.qubitPositions:
-        #     layer_pos.append(self.qubitPositions[i])
-        # for layer in circuit: 
-        #     if len(layer)>1:
-        #         draw_circuit_layers(self.graph, layer_pos, layer)
-        # draw_layers_ordered(self.graph, layer_pos)
+        print(self.schedule)
+        layer_pos=[]
+        for i in self.qubitPositions:
+            layer_pos.append(self.qubitPositions[i])
+        for layer in circuit: 
+            if len(layer)>1:
+                draw_circuit_layers(self.graph, layer_pos, layer)
+        draw_layers_ordered(self.graph, layer_pos)
 
         
     def get_2QPulse(self): 
@@ -98,9 +99,9 @@ class CCircuit():
             #unload set one 
             #unload set two 
 
-            Tr*=math.exp(-((T_o * math.sqrt(D_i/D_o))/T_2)*N)
+            Tr*=math.exp(-((T_o * math.sqrt(D_i/D_o))/T_2)*N/2)
             F2*=(1-(1-f2)/2)**(len(layer)*2)
-            Tr*=math.exp(-((T_o * math.sqrt(D_i/D_o))/T_2)*N)
+            Tr*=math.exp(-((T_o * math.sqrt(D_i/D_o))/T_2)*N/2)
 
         F1=f1**(self.oneQ)
 
@@ -116,7 +117,8 @@ class CCircuit():
 
 qasm_dir = 'qasm_files'
 qasm_files = [f for f in os.listdir(qasm_dir) if f.endswith('.qasm')]
-for size in [55]:
+qasm_files=[qasm_files[13]]
+for size in [3]:
 
     data = {
     "File": [],
@@ -136,9 +138,11 @@ for size in [55]:
         fidelities = []
         qpulses = []
         qgates = []
-        for i in range(30):
-            print(i)
+        for i in range(3):
+            start=time.time()
             circuit = CCircuit(file_path,size)
+            stop=time.time()
+            print(stop-start)
             fidelities.append(circuit.get_Fidelity2())
             qpulses.append(circuit.get_2QPulse())
             qgates.append(circuit.get_2q_gates())

@@ -38,7 +38,7 @@ class SupermarqBenchmark(Benchmark):
     def __init__(self, type, n_qubits):
         super().__init__()
         self.type = type
-        self.path = f"benchmarks/supermarq/supermarq_{type}_n{n_qubits}.qasm"
+        self.path = f"fpqa_revision_AE/benchmarks/supermarq/supermarq_{type}_n{n_qubits}.qasm"
         print(self.path)
         self.circ = QuantumCircuit.from_qasm_file(self.path)
         self.n_qubits = self.circ.num_qubits
@@ -60,7 +60,7 @@ class QASMBenchmark(Benchmark):
     def __init__(self, type, n_qubits):
         super().__init__()
         self.type = type
-        self.path = f"benchmarks/QASMBench/{type}_n{n_qubits}.qasm"
+        self.path = f"fpqa_revision_AE/benchmarks/QASMBench/{type}_n{n_qubits}.qasm"
         print(self.path)
         self.circ = QuantumCircuit.from_qasm_file(self.path)
         self.n_qubits = self.circ.num_qubits
@@ -71,7 +71,7 @@ class AlgorithmBenchmark(Benchmark):
     def __init__(self, type, n_qubits):
         super().__init__()
         self.n_qubits = n_qubits
-        self.path = f"benchmarks/algorithm/{type}_n{n_qubits}.qasm"
+        self.path = f"fpqa_revision_AE/benchmarks/algorithm/{type}_n{n_qubits}.qasm"
         print(self.path)
         self.circ = QuantumCircuit.from_qasm_file(self.path)
         self.circ.remove_final_measurements()
