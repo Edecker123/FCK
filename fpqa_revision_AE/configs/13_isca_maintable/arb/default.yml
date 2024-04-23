@@ -4,18 +4,65 @@ backend_params:
     geyser_dump_transpiled_qasm: [False]
 
 benchmarks:
-- name: algorithm
-  type: ['hhl']
-  n_qubits: [7]
-- name: supermarq
-  type: ['mermin_bell']
-  n_qubits: [10]
-- name: QASMBench
-  type: ['QV']
-  n_qubits: [32]
-- name: QASMBench
-  type: ['bv']
-  n_qubits: [50]
-- name: algorithm
-  type: ['bv']
-  n_qubits: [70]
+  - name: algorithm
+    type: ['adder']
+    n_qubits: [10]
+  - name: algorithm
+    type: ['dnn']
+    n_qubits: [16]
+  - name: algorithm
+    type: ['dnn']
+    n_qubits: [33]
+  - name: algorithm
+    type: ['dnn']
+    n_qubits: [51]
+  - name: algorithm
+    type: ['ga']
+    n_qubits: [9]
+  - name: algorithm
+    type: ['hhl']
+    n_qubits: [7]
+  - name: algorithm
+    type: ['ising']
+    n_qubits: [26]
+  - name: algorithm
+    type: ['ising']
+    n_qubits: [34]
+  - name: algorithm
+    type: ['ising']
+    n_qubits: [98]
+  - name: algorithm
+    type: ['qaoa4']
+    n_qubits: [20]
+  - name: algorithm
+    type: ['qaoa8']
+    n_qubits: [40]
+  - name: algorithm
+    type: ['qaoa']
+    n_qubits: [6]
+  - name: algorithm
+    type: ['qft']
+    n_qubits: [18]
+  - name: algorithm
+    type: ['QV']
+    n_qubits: [32]
+  - name: algorithm
+    type: ['sqrt']
+    n_qubits: [18]
+  - name: algorithm
+    type: ['vqe']
+    n_qubits: [4]
+
+
+# - name: supermarq
+#   type: ['mermin_bell']
+#   n_qubits: [10]
+# - name: QASMBench
+#   type: ['QV']
+#   n_qubits: [32]
+# - name: QASMBench
+#   type: ['bv']
+#   n_qubits: [50]
+# - name: algorithm
+#   type: ['bv']
+#   n_qubits: [70]
