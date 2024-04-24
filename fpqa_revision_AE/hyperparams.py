@@ -137,7 +137,7 @@ class HyperParams(object):
         n_rows=[10, 10, 10],
         n_cols=[10, 10, 10],
         n_atoms_per_array=None,
-        n_aods=2,
+        n_aods=1, # Only one AOD in the neutral atom array 
         atom_distance=15 * 1e-6,
         T_per_move=300 * 1e-6,
         x_zpf=38 * 1e-9,

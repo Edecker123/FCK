@@ -122,10 +122,10 @@ def main(args_config, args_pdb, opts, printing=True, multiprocessing=True):
             print(res)
             print("\n")
     if printing:
-        print(all_fid_list)
+        print(all_fid_list) # Metric 2
         print(all_2q_list)
-        print(all_depth_list)
-        print(all_time_list)
+        print(all_depth_list) # Metric 1
+        print(all_time_list) 
     return all_res
 
 
