@@ -1,16 +1,64 @@
 from qiskit.transpiler import CouplingMap
-from qiskit import QuantumCircuit, Aer, transpile
+from qiskit import QuantumCircuit, Aer, transpile, QuantumRegister
 from qiskit.transpiler import CouplingMap
 from qiskit import QuantumCircuit
 from qiskit.transpiler import CouplingMap
 from compile_transpile_helper import *
 from compile_transpile_helper import *
+from qiskit.circuit.gate import Gate
 import os 
 import pandas as pd 
-from circuit_to_dag import *
 from dagcircuit_scheduler import *
+from qiskit.circuit.equivalence_library import SessionEquivalenceLibrary
+from qiskit.circuit.library import CXGate, RZGate, SXGate, RXGate, RYGate, UGate
 
-def get_FAA_fidelity(sx,rx,iswap,schedule,num_qubits): 
+class root_SWAP(Gate):
+
+    def __init__(self, label=None):
+        super().__init__("root_swap", 2, [], label=label)
+        self.root_swap_matrix=[]
+
+    def _define(self):
+        # Define the matrix for the Root Swap gate (sqrt(SWAP))
+        theta = np.pi / 4
+        self.root_swap_matrix = np.array([
+            [1, 0, 0, 0],
+            [0, np.cos(theta), 1j*np.sin(theta), 0],
+            [0, 1j*np.sin(theta), np.cos(theta), 0],
+            [0, 0, 0, 1]
+        ])
+        
+        # Create a quantum circuit that applies the matrix as a unitary
+        qc = QuantumCircuit(2)
+        qc.unitary(self.root_swap_matrix, [0, 1], label="riSWAP")
+        self.definition = qc
+
+# swap=root_SWAP()
+# swap._define()
+
+theta = np.pi / 4
+swap=np.array([
+            [1, 0, 0, 0],
+            [0, np.cos(theta), 1j*np.sin(theta), 0],
+            [0, 1j*np.sin(theta), np.cos(theta), 0],
+            [0, 0, 0, 1]
+        ])
+# Define quantum registers
+q = QuantumRegister(2, "q")
+
+# Define the equivalent circuit for a CNOT gate using root iSWAP, Rx, Ry, Sx
+def_cx_rootiswap = QuantumCircuit(q)
+def_cx_rootiswap.ry(np.pi/2, 0)              # Initial rotation on control
+def_cx_rootiswap.unitary(swap, [0, 1], label='riSWAP')  # First root iSWAP
+def_cx_rootiswap.ry(-np.pi/2, 0)             # Correction on control
+def_cx_rootiswap.rx(np.pi/2, 1)              # Correction on target
+def_cx_rootiswap.unitary(swap, [0, 1], label='riSWAP')  # Second root iSWAP
+def_cx_rootiswap.rx(-np.pi/2, 1)             # Final adjustment on target
+
+# Add the equivalence to the session's equivalence library
+SessionEquivalenceLibrary.add_equivalence(CXGate(), def_cx_rootiswap)
+
+def get_FAA_fidelity(u3,cz,num_qubits): 
 
     #system parameters
     f1=.9999
@@ -19,8 +67,8 @@ def get_FAA_fidelity(sx,rx,iswap,schedule,num_qubits):
     T2=(25*(10**-6))
     G1T=25*(10**-9)
     G2T=15*(10**-9)
-    F1=f1**(sx+rx)
-    F2=f2**iswap
+    F1=f1**(u3)
+    F2=f2**(cz)
     time_fidelity=1
 
     '''get layers that are executed in paralell. After the schedule 
@@ -31,7 +79,7 @@ def get_FAA_fidelity(sx,rx,iswap,schedule,num_qubits):
     qubit_times={}
     for qubit in range(num_qubits):
         qubit_times[qubit]=0
-    #assume that all gates can be executed in paralell with no restriction
+        
     for layer in schedule: 
         for qubit in qubit_times:
             qubit_times[qubit]+=1
@@ -46,6 +94,7 @@ def get_FAA_fidelity(sx,rx,iswap,schedule,num_qubits):
     fidelity=F1*F2*time_fidelity
 
     return fidelity
+
 def coupling_to_adjacency(coupling_list):
     """Convert a coupling list into an adjacency list."""
     adjacency_list = {}
@@ -88,66 +137,33 @@ def square_grid(n, m):
     return coupling_list, position_dict
 
 
-def transpile_and_get_statistics(filename, schedule, conn,op_lvl=3,basis=0):
-    """
-    Transpiles a quantum circuit from a QASM file for a custom topology and computes statistics about its performance.
+def transpile_and_get_statistics(filename, schedule, conn,op_lvl=3):
+   
+    basis_gates=['u3', 'cz']
 
-    Args:
-        filename (str): The name (path) of the QASM file containing the quantum circuit.
-        conn (dict): An adjacency list representation of the qubit connectivity graph.
-
-    Returns:
-        list: A list containing:
-            - The number of 'u3' gates in the transpiled circuit.
-            - The number of 'cz' gates in the transpiled circuit.
-            - The total pulse count (defined as 3 times the number of 'cz' gates plus the number of 'u3' gates).
-            - The critical path pulse count of the transpiled circuit.
-            - The combined probability of error based on gate error rates.
-            - The transpiled QuantumCircuit object.
-
-    Workflow:
-        1. Convert the provided qubit connectivity graph into a list of qubit pairs (edges).
-        2. Define error probabilities for the 'cz' and 'u3' gates.
-        3. Load the quantum circuit from the QASM file.
-        4. Transpile (optimize) the quantum circuit for the given qubit connectivity.
-        5. Compute various statistics such as gate counts, total pulse count, and combined error probability.
-        6. Return the computed statistics and the transpiled circuit.
-
-    Note:
-        - The function assumes specific error rates for the 'cz' and 'u3' gates. Adjust these as needed.
-        - The error probabilities for gates are assumed to be independent, which is used to compute the combined error probability.
-        - The function uses the Qiskit library functions for quantum circuit manipulation and transpilation.
-    """
-    if basis==0: 
-        basis_gate=['u3','cz']
-    elif basis==1:
-        basis_gate=['rz', 'sx','cx']
    # Generate coupling list from connection
     c_list = generate_coupling_list(conn)
 
     # Create coupling map
     c_map = CouplingMap(c_list)
-    back = Aer.get_backend('qasm_simulator')
 
     # Load circuit from QASM file and transpile for the custom topology
     circuit = QuantumCircuit.from_qasm_file(filename)
-    optimized_circuit = transpile(circuit, coupling_map=c_map, optimization_level=op_lvl, basis_gates=basis_gate)
+    optimized_circuit = transpile(circuit, coupling_map=c_map, optimization_level=3, basis_gates=basis_gates)
 
    # Get gate counts
     gate_counts = optimized_circuit.count_ops()
 
     qubit_count=optimized_circuit.num_qubits
     # Print statistics
-    rx_count = gate_counts.get('rz', 0) 
-    sx_count = gate_counts.get('sx', 0)
+    u3_count = gate_counts.get('u3', 0) 
 
-    cx_count = gate_counts.get('cx', 0)
-    # print(f"Number of cz gates: {cz_count}")
+    cz_count = gate_counts.get('cz', 0)
 
     # get fidelity
-    fidelity=get_FAA_fidelity(sx_count, rx_count, cx_count,schedule,qubit_count)
+    fidelity=get_FAA_fidelity(u3_count, cz_count,schedule,qubit_count)
 
-    return [cx_count,fidelity,optimized_circuit]
+    return [cz_count,fidelity,optimized_circuit]
 
 data = {
     "File": [],
@@ -158,7 +174,7 @@ data = {
 }
 
 s_conn, s_pos=square_grid(10,10)
-qasm_dir = 'qasm_files'
+qasm_dir = 'Morzi/qasm_files'
 qasm_files = [f for f in os.listdir(qasm_dir) if f.endswith('.qasm')]
 
 for qasm_file in qasm_files:
@@ -170,12 +186,12 @@ for qasm_file in qasm_files:
     qpulses = []
     qgates = []
     
-    for i in range(30):
+    for i in range(10):
         print(i)
         circuit_dag=qasm_to_dag(file_path)
         layers_raw=extract_parallel_layers(circuit_dag)
         circuit=get_2q_layers(layers_raw)
-        data_function=transpile_and_get_statistics(file_path,circuit, coupling_to_adjacency(s_conn), 3, 1)
+        data_function=transpile_and_get_statistics(file_path,circuit, coupling_to_adjacency(s_conn), 3)
         fidelities.append(data_function[1])
         qgates.append(data_function[0])
     

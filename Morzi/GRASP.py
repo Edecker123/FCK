@@ -1,5 +1,5 @@
 from draw import *
-from circuit_to_dag import *
+from circuit_to_dag_utils import *
 from collections import Counter
 from math import floor
 from cross_minimizationBCM import *

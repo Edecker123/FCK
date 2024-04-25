@@ -1,4 +1,5 @@
 from scheduling import *
+from schedule_algorithm import *
 
 def find_popular_pairs_sorted(schedule):
     # Dictionary to count the frequency of each pair
