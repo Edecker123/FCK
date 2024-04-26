@@ -5,7 +5,7 @@ import sys
 current_pythonpath = os.environ.get('PYTHONPATH', '')
 
 # Define the new path you want to add
-new_path = '/Users/ethan/Desktop/FCK'
+new_path = 'C:\\Users\\ecd5249\\Desktop\\FCK'
 
 # Add new_path to sys.path for immediate use in this script
 if new_path not in sys.path:
@@ -27,7 +27,7 @@ print("Updated sys.path:", sys.path)
 
 from qasm_parsing import * 
 from dagcircuit_scheduler import * 
-from draw import * 
+from utils import * 
 from cross_minimizationBCM import *
 from max_cut import * 
 from scheduling import *
@@ -85,12 +85,28 @@ class CCircuit():
             self.qubitPositions={0:self.qubitPositions[0], 1:self.qubitPositions[1]}
 
         #PHASE3: Executing front layer based on FPQA constraints 
-        self.schedule=schedule_beta(circuit_dag, self.qubitRanks, self.qubitPositions)
+        self.schedule=schedule(circuit, self.qubitPositions, self.qubitRanks)
 
         #DIMENSIONAL Variation: Optional for low space 
         if (dimensions!=None and
            (dimensions!=55)):
             self.qubitPositions,self.schedule,self.qubitRanks=split_dimensions(self.qubitPositions, self.qubitRanks,self.schedule,dimensions,copy.deepcopy(circuit))
+
+        #TEST CODE: 
+        # layer_pos=[]
+        # for i in self.qubitPositions:
+        #     layer_pos.append(self.qubitPositions[i])
+        # for layer in self.schedule: 
+        #     if len(layer)>1:
+        #         draw_circuit_layers(self.graph, layer_pos, layer)
+        # draw_layers_ordered(self.graph, layer_pos)
+
+        #TEST CODE Schedule: 
+        schedule_bool=schedule_tester(self.qasmCircuit, self.schedule)
+
+        if not schedule_bool: 
+            print("shit")
+
 
     def get_2QPulse(self): 
         return len(self.schedule)
@@ -133,7 +149,7 @@ class CCircuit():
 
 qasm_dir = 'Morzi/qasm_files'
 qasm_files = [f for f in os.listdir(qasm_dir) if f.endswith('.qasm')]
-for size in [3,10,25,55]:
+for size in [55,25,10,3]:
 
     data = {
     "File": [],
@@ -153,7 +169,7 @@ for size in [3,10,25,55]:
         fidelities = []
         qpulses = []
         qgates = []
-        for i in range(10):
+        for i in range(1):
             start=time.time()
             circuit = CCircuit(file_path,size)
             stop=time.time()

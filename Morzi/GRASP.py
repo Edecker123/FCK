@@ -1,4 +1,4 @@
-from draw import *
+from utils import *
 from circuit_to_dag_utils import *
 from collections import Counter
 from math import floor

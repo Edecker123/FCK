@@ -2,7 +2,7 @@ from qiskit.dagcircuit import DAGCircuit
 from collections import deque
 from qiskit.converters import circuit_to_dag
 from qiskit import QuantumCircuit
-from draw import * 
+from utils import * 
 from cross_minimizationBCM import *
 from qasm_parsing import *
 from qiskit.dagcircuit import DAGCircuit, DAGNode

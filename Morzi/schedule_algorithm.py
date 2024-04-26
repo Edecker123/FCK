@@ -83,12 +83,6 @@ def constraint_pass(operation, qubit_ranks, front_layer, filtered_layer, qubit_p
 
     return True
 
-def get_front_layer(dag):
-    # Use built in front layer grab
-    front_layer = dag.front_layer()
-
-    return front_layer
-
 def filter_layer(front_layer, qubit_positions, qubit_ranks): 
 
     filtered_layer=[] #return ds
@@ -104,14 +98,6 @@ def filter_layer(front_layer, qubit_positions, qubit_ranks):
             filtered_layer.append(operation)
     
     return filtered_layer
-
-def remove_front_layer(dag, front_layer):
-
-    # Remove the nodes corresponding to the front layer gates from the DAG
-    for node in front_layer:
-        dag.remove_op_node(node)
-
-    return dag
 
 def schedule_beta(dag, qubit_ranks, qubit_positions):
 
