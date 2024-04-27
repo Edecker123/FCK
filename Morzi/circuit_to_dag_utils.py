@@ -32,7 +32,8 @@ def list_to_undirected_graph(edges_list):
 def qasm_to_dag_two_qubit_only(filepath):
     # Load a quantum circuit from the QASM file
     qc = QuantumCircuit.from_qasm_file(filepath)
-    
+    qc=transpile(qc, basis_gates=['u3','cz','id'])
+
     # Convert the quantum circuit to a DAG
     dag = circuit_to_dag(qc)
     
@@ -69,3 +70,15 @@ def qasm_to_dag(filepath):
     
     # The function returns the filtered DAG object for further manipulation if required
     return filtered_dag
+
+def circuit_to_2qdag(circuit): 
+
+    dag=circuit_to_dag(circuit)
+    op_nodes=dag.topological_op_nodes()
+
+    for gate in list(op_nodes): 
+        qargs=gate.qargs
+        if len(qargs)<2: 
+            dag.remove_op_node(gate)
+    
+    return dag

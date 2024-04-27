@@ -59,8 +59,8 @@ class BakerCompiler(object):
         circ_decomposed = decompose_swap(circ_out, hw, im, record_largest_gate=None)
         circ_cz = transpile(
             circ_decomposed,
-            basis_gates=["cz", "u3", "u2", "u1", "id"],
-            optimization_level=1,
+            basis_gates=["cz", "u3"],
+            optimization_level=3,
         )
 
         #    count = circ_cz.count_ops()

@@ -2,7 +2,7 @@ from qiskit.dagcircuit import DAGCircuit
 from collections import deque
 from qiskit.converters import circuit_to_dag
 from qiskit import QuantumCircuit
-from draw import * 
+from utils import * 
 from cross_minimizationBCM import *
 from qasm_parsing import *
 from qiskit.dagcircuit import DAGCircuit, DAGNode
@@ -16,6 +16,7 @@ from qiskit.dagcircuit import DAGCircuit
 from collections import deque
 import random 
 from scheduling import * 
+from scheduler_utils import * 
 
 def extract_parallel_layers(dag: DAGCircuit):
     """
@@ -78,19 +79,26 @@ def print_layers_operations(layers):
 
 
 def get_2q_layers(layers): 
+
     layer_return=[]
+
+    #filter layers to two qubit gates only
     for idx, layer in enumerate(layers, 1):
+
         layer_int=[]
+
         for operation in layer:
             try:
-                op=operation.name
                 pair=[]
+
                 for qubit in operation.qargs:
                     pair.append(qubit.index)
-                layer_int.append(pair)
-           
+
+                if len(pair)>1:
+                    layer_int.append(pair)
             except:
                 pass
+
         if len(layer_int)>0:
             layer_return.append(layer_int)
 
@@ -234,3 +242,5 @@ def modify_dag_based_on_condition(dag, condition_check, delay_gate, cz_gate,vari
                 #         assert not are_connected(conn, [q_pairs[i], q_pairs[j]]), "Two CZ gates in the same layer have connected qubits."
             break
     return dag
+
+
