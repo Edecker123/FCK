@@ -5,7 +5,7 @@ import sys
 current_pythonpath = os.environ.get('PYTHONPATH', '')
 
 # Define the new path you want to add
-new_path = 'C:\\Users\\ecd5249\\Desktop\\FCK'
+new_path = '/Users/ethan/Desktop/FCK'
 
 # Add new_path to sys.path for immediate use in this script
 if new_path not in sys.path:
