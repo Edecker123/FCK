@@ -1,6 +1,5 @@
-
-from arctic_passes.utils.utils import *
-from arctic_passes.utils.maxcut_master.maxcut._solvers import _sdp
+from compilers.utils.utils import *
+from compilers.utils.maxcut_master.maxcut._solvers import _sdp
 import networkx as nx
 import numpy as np 
 import random 

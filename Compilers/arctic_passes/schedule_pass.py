@@ -1,4 +1,4 @@
-from arctic_passes.utils.utils import * 
+from compilers.utils.utils import * 
 
 def cross_check(positions, edges,ranks): 
     edge0=edges[0]

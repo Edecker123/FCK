@@ -21,13 +21,14 @@ import sys
 # print("Updated PYTHONPATH:", os.environ['PYTHONPATH'])
 # print("Updated sys.path:", sys.path)
 
-from arctic_passes import instruction_pass, v2p_pass, schedule_pass
+from compilers.arctic_passes import instruction_pass, v2p_pass, schedule_pass
 from qiskit import QuantumCircuit
 
 
 class arctic_compiler():
-    def __init__(self,qasm_file, backend=0): 
-        self.circuit=QuantumCircuit.from_qasm_file(qasm_file)
+    def __init__(self,qasm_file=None, backend=0): 
+        self.qasm_file=qasm_file
+        self.circuit=None
 
         #necessary hardware parameters
         self.dimension=backend
@@ -41,7 +42,9 @@ class arctic_compiler():
         self.v2p_pass=v2p_pass.v2p_pass(self)
         self.schedule_pass=schedule_pass.schedule_pass(self)
 
-    def arctic_compile(self): 
+    def compile(self):
+        print(self.qasm_file)
+        self.circuit=QuantumCircuit.from_qasm_file(self.qasm_file) 
         self.instruction_pass.transpile_circuit()
         self.v2p_pass.v2p_map()
         self.schedule_pass.agnostic_scheduler()
