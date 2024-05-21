@@ -1,8 +1,8 @@
-- benchmark: fpqa_revision_AE/benchmarks/algorithm/vqe_n4.qasm
+- benchmark: compilers/fpqa_revision_AE/benchmarks/algorithm/vqe_n4.qasm
   circ_stats:
     avg_move_distance: 0.00010606601706013095
     avg_move_speed: 0.039283710022270726
-    compilation_time: 0.4440948963165283
+    compilation_time: 0.135911226272583
     depth: 9
     each_move_distance_mean: 0.7856742013183862
     each_move_distance_std: 0.7027283689263065
@@ -35,7 +35,7 @@
     atom_loss_prob: 0.0068
     atom_transfer_time: 1.4999999999999999e-05
     base_set: default0
-    configs:
+    configs: &id003
       backend_params:
         base_set: default0
         nonretranspile_changes:
@@ -129,7 +129,7 @@
         name: fpqac_generic
         print_log: false
       count_gates: true
-      result_path: fpqa_revision_AE/results/13_isca_maintable/arb/fpqac
+      result_path: ./compilers/fpqa_revision_AE/results/13_isca_maintable/arb/fpqac
     cooling_deltaN_thres: 15
     dump_full_report: false
     faa_cmap_bidirect: true
@@ -163,7 +163,7 @@
     lambd: 0.109375
     log_path: null
     n_aods: 1
-    n_atoms_per_array:
+    n_atoms_per_array: &id004
     - 100
     - 100
     - 100
@@ -210,18 +210,18 @@
     na_1Q_fidelity: 0.99992
     na_2Q_fidelity: 0.9975
     na_N_max: 33
-  path: fpqa_revision_AE/benchmarks/algorithm/vqe_n4.qasm
+  path: compilers/fpqa_revision_AE/benchmarks/algorithm/vqe_n4.qasm
   time:
     1q_gate: 6.25e-06
     2q_gate: 3.4200000000000007e-06
     movement: 0.0026999999999999997
     total_time: 0.0027096699999999995
     transfer: 0.0
-- benchmark: fpqa_revision_AE/benchmarks/algorithm/ga_n9.qasm
+- benchmark: compilers/fpqa_revision_AE/benchmarks/algorithm/ga_n9.qasm
   circ_stats:
     avg_move_distance: 0.0005727564925408122
     avg_move_speed: 0.07343031955651438
-    compilation_time: 0.5542201995849609
+    compilation_time: 0.12513303756713867
     depth: 26
     each_move_distance_mean: 1.4686063916951373
     each_move_distance_std: 1.9006383231701287
@@ -254,101 +254,7 @@
     atom_loss_prob: 0.0068
     atom_transfer_time: 1.4999999999999999e-05
     base_set: default0
-    configs:
-      backend_params:
-        base_set: default0
-        nonretranspile_changes:
-          backer_penalty:
-          - 0
-          geyser_dump_transpiled_qasm:
-          - false
-        retranspile_changes: {}
-      benchmarks:
-      - n_qubits:
-        - 4
-        name: algorithm
-        type:
-        - vqe
-      - n_qubits:
-        - 9
-        name: algorithm
-        type:
-        - ga
-      - n_qubits:
-        - 6
-        name: algorithm
-        type:
-        - qaoa
-      - n_qubits:
-        - 26
-        name: algorithm
-        type:
-        - ising
-      - n_qubits:
-        - 10
-        name: algorithm
-        type:
-        - adder
-      - n_qubits:
-        - 34
-        name: algorithm
-        type:
-        - ising
-      - n_qubits:
-        - 20
-        name: algorithm
-        type:
-        - qaoa4
-      - n_qubits:
-        - 7
-        name: algorithm
-        type:
-        - hhl
-      - n_qubits:
-        - 16
-        name: algorithm
-        type:
-        - dnn
-      - n_qubits:
-        - 33
-        name: algorithm
-        type:
-        - dnn
-      - n_qubits:
-        - 98
-        name: algorithm
-        type:
-        - ising
-      - n_qubits:
-        - 51
-        name: algorithm
-        type:
-        - dnn
-      - n_qubits:
-        - 18
-        name: algorithm
-        type:
-        - qft
-      - n_qubits:
-        - 40
-        name: algorithm
-        type:
-        - qaoa8
-      - n_qubits:
-        - 18
-        name: algorithm
-        type:
-        - sqrt
-      - n_qubits:
-        - 32
-        name: algorithm
-        type:
-        - QV
-      compiler:
-        name: fpqac_generic
-        print_log: false
-      count_gates: true
-      result_path: fpqa_revision_AE/results/13_isca_maintable/arb/fpqac
+    configs: *id003
     cooling_deltaN_thres: 15
     dump_full_report: false
     faa_cmap_bidirect: true
@@ -360,14 +266,8 @@
     fpqac_allow_order_violation: false
     fpqac_allow_overlap_violation: false
     fpqac_generic_cmap_bidirect: true
-    fpqac_generic_n_cols_cmap: &id003
-    - 10
-    - 10
-    - 10
-    fpqac_generic_n_rows_cmap: &id004
-    - 10
-    - 10
-    - 10
+    fpqac_generic_n_cols_cmap: *id001
+    fpqac_generic_n_rows_cmap: *id002
     fpqac_generic_partition_factor: 0.9
     fpqac_generic_partition_method: heuristic
     fpqac_generic_seed_transpiler: 0
@@ -382,12 +282,9 @@
     lambd: 0.109375
     log_path: null
     n_aods: 1
-    n_atoms_per_array:
-    - 100
-    - 100
-    - 100
-    n_cols: *id003
-    n_rows: *id004
+    n_atoms_per_array: *id004
+    n_cols: *id001
+    n_rows: *id002
     na_1Q_fidelity: 0.99992
     na_1Q_time: 6.25e-07
     na_2Q_fidelity: 0.9975
@@ -424,23 +321,23 @@
     flying_search_method: DP
     flying_square_mapping: true
     n_aods: 1
-    n_cols: *id003
-    n_rows: *id004
+    n_cols: *id001
+    n_rows: *id002
     na_1Q_fidelity: 0.99992
     na_2Q_fidelity: 0.9975
     na_N_max: 33
-  path: fpqa_revision_AE/benchmarks/algorithm/ga_n9.qasm
+  path: compilers/fpqa_revision_AE/benchmarks/algorithm/ga_n9.qasm
   time:
     1q_gate: 1.6875000000000004e-05
     2q_gate: 9.879999999999997e-06
     movement: 0.007799999999999999
     total_time: 0.007826755
     transfer: 0.0
-- benchmark: fpqa_revision_AE/benchmarks/algorithm/qaoa_n6.qasm
+- benchmark: compilers/fpqa_revision_AE/benchmarks/algorithm/qaoa_n6.qasm
   circ_stats:
     avg_move_distance: 0.0001909188308779413
     avg_move_speed: 0.014142135620588248
-    compilation_time: 0.9090251922607422
+    compilation_time: 0.220717191696167
     depth: 45
     each_move_distance_mean: 0.28284271247461906
     each_move_distance_std: 0.692820323027551
@@ -473,101 +370,7 @@
     atom_loss_prob: 0.0068
     atom_transfer_time: 1.4999999999999999e-05
     base_set: default0
-    configs:
-      backend_params:
-        base_set: default0
-        nonretranspile_changes:
-          backer_penalty:
-          - 0
-          geyser_dump_transpiled_qasm:
-          - false
-        retranspile_changes: {}
-      benchmarks:
-      - n_qubits:
-        - 4
-        name: algorithm
-        type:
-        - vqe
-      - n_qubits:
-        - 9
-        name: algorithm
-        type:
-        - ga
-      - n_qubits:
-        - 6
-        name: algorithm
-        type:
-        - qaoa
-      - n_qubits:
-        - 26
-        name: algorithm
-        type:
-        - ising
-      - n_qubits:
-        - 10
-        name: algorithm
-        type:
-        - adder
-      - n_qubits:
-        - 34
-        name: algorithm
-        type:
-        - ising
-      - n_qubits:
-        - 20
-        name: algorithm
-        type:
-        - qaoa4
-      - n_qubits:
-        - 7
-        name: algorithm
-        type:
-        - hhl
-      - n_qubits:
-        - 16
-        name: algorithm
-        type:
-        - dnn
-      - n_qubits:
-        - 33
-        name: algorithm
-        type:
-        - dnn
-      - n_qubits:
-        - 98
-        name: algorithm
-        type:
-        - ising
-      - n_qubits:
-        - 51
-        name: algorithm
-        type:
-        - dnn
-      - n_qubits:
-        - 18
-        name: algorithm
-        type:
-        - qft
-      - n_qubits:
-        - 40
-        name: algorithm
-        type:
-        - qaoa8
-      - n_qubits:
-        - 18
-        name: algorithm
-        type:
-        - sqrt
-      - n_qubits:
-        - 32
-        name: algorithm
-        type:
-        - QV
-      compiler:
-        name: fpqac_generic
-        print_log: false
-      count_gates: true
-      result_path: fpqa_revision_AE/results/13_isca_maintable/arb/fpqac
+    configs: *id003
     cooling_deltaN_thres: 15
     dump_full_report: false
     faa_cmap_bidirect: true
@@ -579,14 +382,8 @@
     fpqac_allow_order_violation: false
     fpqac_allow_overlap_violation: false
     fpqac_generic_cmap_bidirect: true
-    fpqac_generic_n_cols_cmap: &id005
-    - 10
-    - 10
-    - 10
-    fpqac_generic_n_rows_cmap: &id006
-    - 10
-    - 10
-    - 10
+    fpqac_generic_n_cols_cmap: *id001
+    fpqac_generic_n_rows_cmap: *id002
     fpqac_generic_partition_factor: 0.9
     fpqac_generic_partition_method: heuristic
     fpqac_generic_seed_transpiler: 0
@@ -601,12 +398,9 @@
     lambd: 0.109375
     log_path: null
     n_aods: 1
-    n_atoms_per_array:
-    - 100
-    - 100
-    - 100
-    n_cols: *id005
-    n_rows: *id006
+    n_atoms_per_array: *id004
+    n_cols: *id001
+    n_rows: *id002
     na_1Q_fidelity: 0.99992
     na_1Q_time: 6.25e-07
     na_2Q_fidelity: 0.9975
@@ -643,23 +437,23 @@
     flying_search_method: DP
     flying_square_mapping: true
     n_aods: 1
-    n_cols: *id005
-    n_rows: *id006
+    n_cols: *id001
+    n_rows: *id002
     na_1Q_fidelity: 0.99992
     na_2Q_fidelity: 0.9975
     na_N_max: 33
-  path: fpqa_revision_AE/benchmarks/algorithm/qaoa_n6.qasm
+  path: compilers/fpqa_revision_AE/benchmarks/algorithm/qaoa_n6.qasm
   time:
     1q_gate: 2.8750000000000035e-05
     2q_gate: 1.7099999999999992e-05
     movement: 0.013499999999999998
     total_time: 0.013545849999999998
     transfer: 0.0
-- benchmark: fpqa_revision_AE/benchmarks/algorithm/ising_n26.qasm
+- benchmark: compilers/fpqa_revision_AE/benchmarks/algorithm/ising_n26.qasm
   circ_stats:
     avg_move_distance: 0.00013189634634546075
     avg_move_speed: 0.02586202869518838
-    compilation_time: 0.8560378551483154
+    compilation_time: 0.24683499336242676
     depth: 17
     each_move_distance_mean: 0.5172405742080269
     each_move_distance_std: 1.9998576234784329
@@ -692,101 +486,7 @@
     atom_loss_prob: 0.0068
     atom_transfer_time: 1.4999999999999999e-05
     base_set: default0
-    configs:
-      backend_params:
-        base_set: default0
-        nonretranspile_changes:
-          backer_penalty:
-          - 0
-          geyser_dump_transpiled_qasm:
-          - false
-        retranspile_changes: {}
-      benchmarks:
-      - n_qubits:
-        - 4
-        name: algorithm
-        type:
-        - vqe
-      - n_qubits:
-        - 9
-        name: algorithm
-        type:
-        - ga
-      - n_qubits:
-        - 6
-        name: algorithm
-        type:
-        - qaoa
-      - n_qubits:
-        - 26
-        name: algorithm
-        type:
-        - ising
-      - n_qubits:
-        - 10
-        name: algorithm
-        type:
-        - adder
-      - n_qubits:
-        - 34
-        name: algorithm
-        type:
-        - ising
-      - n_qubits:
-        - 20
-        name: algorithm
-        type:
-        - qaoa4
-      - n_qubits:
-        - 7
-        name: algorithm
-        type:
-        - hhl
-      - n_qubits:
-        - 16
-        name: algorithm
-        type:
-        - dnn
-      - n_qubits:
-        - 33
-        name: algorithm
-        type:
-        - dnn
-      - n_qubits:
-        - 98
-        name: algorithm
-        type:
-        - ising
-      - n_qubits:
-        - 51
-        name: algorithm
-        type:
-        - dnn
-      - n_qubits:
-        - 18
-        name: algorithm
-        type:
-        - qft
-      - n_qubits:
-        - 40
-        name: algorithm
-        type:
-        - qaoa8
-      - n_qubits:
-        - 18
-        name: algorithm
-        type:
-        - sqrt
-      - n_qubits:
-        - 32
-        name: algorithm
-        type:
-        - QV
-      compiler:
-        name: fpqac_generic
-        print_log: false
-      count_gates: true
-      result_path: fpqa_revision_AE/results/13_isca_maintable/arb/fpqac
+    configs: *id003
     cooling_deltaN_thres: 15
     dump_full_report: false
     faa_cmap_bidirect: true
@@ -798,14 +498,8 @@
     fpqac_allow_order_violation: false
     fpqac_allow_overlap_violation: false
     fpqac_generic_cmap_bidirect: true
-    fpqac_generic_n_cols_cmap: &id007
-    - 10
-    - 10
-    - 10
-    fpqac_generic_n_rows_cmap: &id008
-    - 10
-    - 10
-    - 10
+    fpqac_generic_n_cols_cmap: *id001
+    fpqac_generic_n_rows_cmap: *id002
     fpqac_generic_partition_factor: 0.9
     fpqac_generic_partition_method: heuristic
     fpqac_generic_seed_transpiler: 0
@@ -820,12 +514,9 @@
     lambd: 0.109375
     log_path: null
     n_aods: 1
-    n_atoms_per_array:
-    - 100
-    - 100
-    - 100
-    n_cols: *id007
-    n_rows: *id008
+    n_atoms_per_array: *id004
+    n_cols: *id001
+    n_rows: *id002
     na_1Q_fidelity: 0.99992
     na_1Q_time: 6.25e-07
     na_2Q_fidelity: 0.9975
@@ -862,23 +553,23 @@
     flying_search_method: DP
     flying_square_mapping: true
     n_aods: 1
-    n_cols: *id007
-    n_rows: *id008
+    n_cols: *id001
+    n_rows: *id002
     na_1Q_fidelity: 0.99992
     na_2Q_fidelity: 0.9975
     na_N_max: 33
-  path: fpqa_revision_AE/benchmarks/algorithm/ising_n26.qasm
+  path: compilers/fpqa_revision_AE/benchmarks/algorithm/ising_n26.qasm
   time:
     1q_gate: 1.125e-05
     2q_gate: 6.459999999999999e-06
     movement: 0.0050999999999999995
     total_time: 0.005117709999999999
     transfer: 0.0
-- benchmark: fpqa_revision_AE/benchmarks/algorithm/adder_n10.qasm
+- benchmark: compilers/fpqa_revision_AE/benchmarks/algorithm/adder_n10.qasm
   circ_stats:
     avg_move_distance: 0.0007966736400492965
     avg_move_speed: 0.029182184617190347
-    compilation_time: 1.0906949043273926
+    compilation_time: 0.24454593658447266
     depth: 91
     each_move_distance_mean: 0.583643692407944
     each_move_distance_std: 1.5410602700151403
@@ -911,101 +602,7 @@
     atom_loss_prob: 0.0068
     atom_transfer_time: 1.4999999999999999e-05
     base_set: default0
-    configs:
-      backend_params:
-        base_set: default0
-        nonretranspile_changes:
-          backer_penalty:
-          - 0
-          geyser_dump_transpiled_qasm:
-          - false
-        retranspile_changes: {}
-      benchmarks:
-      - n_qubits:
-        - 4
-        name: algorithm
-        type:
-        - vqe
-      - n_qubits:
-        - 9
-        name: algorithm
-        type:
-        - ga
-      - n_qubits:
-        - 6
-        name: algorithm
-        type:
-        - qaoa
-      - n_qubits:
-        - 26
-        name: algorithm
-        type:
-        - ising
-      - n_qubits:
-        - 10
-        name: algorithm
-        type:
-        - adder
-      - n_qubits:
-        - 34
-        name: algorithm
-        type:
-        - ising
-      - n_qubits:
-        - 20
-        name: algorithm
-        type:
-        - qaoa4
-      - n_qubits:
-        - 7
-        name: algorithm
-        type:
-        - hhl
-      - n_qubits:
-        - 16
-        name: algorithm
-        type:
-        - dnn
-      - n_qubits:
-        - 33
-        name: algorithm
-        type:
-        - dnn
-      - n_qubits:
-        - 98
-        name: algorithm
-        type:
-        - ising
-      - n_qubits:
-        - 51
-        name: algorithm
-        type:
-        - dnn
-      - n_qubits:
-        - 18
-        name: algorithm
-        type:
-        - qft
-      - n_qubits:
-        - 40
-        name: algorithm
-        type:
-        - qaoa8
-      - n_qubits:
-        - 18
-        name: algorithm
-        type:
-        - sqrt
-      - n_qubits:
-        - 32
-        name: algorithm
-        type:
-        - QV
-      compiler:
-        name: fpqac_generic
-        print_log: false
-      count_gates: true
-      result_path: fpqa_revision_AE/results/13_isca_maintable/arb/fpqac
+    configs: *id003
     cooling_deltaN_thres: 15
     dump_full_report: false
     faa_cmap_bidirect: true
@@ -1017,14 +614,8 @@
     fpqac_allow_order_violation: false
     fpqac_allow_overlap_violation: false
     fpqac_generic_cmap_bidirect: true
-    fpqac_generic_n_cols_cmap: &id009
-    - 10
-    - 10
-    - 10
-    fpqac_generic_n_rows_cmap: &id010
-    - 10
-    - 10
-    - 10
+    fpqac_generic_n_cols_cmap: *id001
+    fpqac_generic_n_rows_cmap: *id002
     fpqac_generic_partition_factor: 0.9
     fpqac_generic_partition_method: heuristic
     fpqac_generic_seed_transpiler: 0
@@ -1039,12 +630,9 @@
     lambd: 0.109375
     log_path: null
     n_aods: 1
-    n_atoms_per_array:
-    - 100
-    - 100
-    - 100
-    n_cols: *id009
-    n_rows: *id010
+    n_atoms_per_array: *id004
+    n_cols: *id001
+    n_rows: *id002
     na_1Q_fidelity: 0.99992
     na_1Q_time: 6.25e-07
     na_2Q_fidelity: 0.9975
@@ -1081,23 +669,23 @@
     flying_search_method: DP
     flying_square_mapping: true
     n_aods: 1
-    n_cols: *id009
-    n_rows: *id010
+    n_cols: *id001
+    n_rows: *id002
     na_1Q_fidelity: 0.99992
     na_2Q_fidelity: 0.9975
     na_N_max: 33
-  path: fpqa_revision_AE/benchmarks/algorithm/adder_n10.qasm
+  path: compilers/fpqa_revision_AE/benchmarks/algorithm/adder_n10.qasm
   time:
     1q_gate: 5.750000000000011e-05
     2q_gate: 3.4579999999999984e-05
     movement: 0.02730000000000006
     total_time: 0.02739208000000006
     transfer: 0.0
-- benchmark: fpqa_revision_AE/benchmarks/algorithm/ising_n34.qasm
+- benchmark: compilers/fpqa_revision_AE/benchmarks/algorithm/ising_n34.qasm
   circ_stats:
     avg_move_distance: 0.0003152058762233876
     avg_move_speed: 0.04377859391991495
-    compilation_time: 1.0732479095458984
+    compilation_time: 0.28290510177612305
     depth: 24
     each_move_distance_mean: 0.875571878763121
     each_move_distance_std: 2.3453210330068495
@@ -1130,101 +718,7 @@
     atom_loss_prob: 0.0068
     atom_transfer_time: 1.4999999999999999e-05
     base_set: default0
-    configs:
-      backend_params:
-        base_set: default0
-        nonretranspile_changes:
-          backer_penalty:
-          - 0
-          geyser_dump_transpiled_qasm:
-          - false
-        retranspile_changes: {}
-      benchmarks:
-      - n_qubits:
-        - 4
-        name: algorithm
-        type:
-        - vqe
-      - n_qubits:
-        - 9
-        name: algorithm
-        type:
-        - ga
-      - n_qubits:
-        - 6
-        name: algorithm
-        type:
-        - qaoa
-      - n_qubits:
-        - 26
-        name: algorithm
-        type:
-        - ising
-      - n_qubits:
-        - 10
-        name: algorithm
-        type:
-        - adder
-      - n_qubits:
-        - 34
-        name: algorithm
-        type:
-        - ising
-      - n_qubits:
-        - 20
-        name: algorithm
-        type:
-        - qaoa4
-      - n_qubits:
-        - 7
-        name: algorithm
-        type:
-        - hhl
-      - n_qubits:
-        - 16
-        name: algorithm
-        type:
-        - dnn
-      - n_qubits:
-        - 33
-        name: algorithm
-        type:
-        - dnn
-      - n_qubits:
-        - 98
-        name: algorithm
-        type:
-        - ising
-      - n_qubits:
-        - 51
-        name: algorithm
-        type:
-        - dnn
-      - n_qubits:
-        - 18
-        name: algorithm
-        type:
-        - qft
-      - n_qubits:
-        - 40
-        name: algorithm
-        type:
-        - qaoa8
-      - n_qubits:
-        - 18
-        name: algorithm
-        type:
-        - sqrt
-      - n_qubits:
-        - 32
-        name: algorithm
-        type:
-        - QV
-      compiler:
-        name: fpqac_generic
-        print_log: false
-      count_gates: true
-      result_path: fpqa_revision_AE/results/13_isca_maintable/arb/fpqac
+    configs: *id003
     cooling_deltaN_thres: 15
     dump_full_report: false
     faa_cmap_bidirect: true
@@ -1236,14 +730,8 @@
     fpqac_allow_order_violation: false
     fpqac_allow_overlap_violation: false
     fpqac_generic_cmap_bidirect: true
-    fpqac_generic_n_cols_cmap: &id011
-    - 10
-    - 10
-    - 10
-    fpqac_generic_n_rows_cmap: &id012
-    - 10
-    - 10
-    - 10
+    fpqac_generic_n_cols_cmap: *id001
+    fpqac_generic_n_rows_cmap: *id002
     fpqac_generic_partition_factor: 0.9
     fpqac_generic_partition_method: heuristic
     fpqac_generic_seed_transpiler: 0
@@ -1258,12 +746,9 @@
     lambd: 0.109375
     log_path: null
     n_aods: 1
-    n_atoms_per_array:
-    - 100
-    - 100
-    - 100
-    n_cols: *id011
-    n_rows: *id012
+    n_atoms_per_array: *id004
+    n_cols: *id001
+    n_rows: *id002
     na_1Q_fidelity: 0.99992
     na_1Q_time: 6.25e-07
     na_2Q_fidelity: 0.9975
@@ -1300,23 +785,23 @@
     flying_search_method: DP
     flying_square_mapping: true
     n_aods: 1
-    n_cols: *id011
-    n_rows: *id012
+    n_cols: *id001
+    n_rows: *id002
     na_1Q_fidelity: 0.99992
     na_2Q_fidelity: 0.9975
     na_N_max: 33
-  path: fpqa_revision_AE/benchmarks/algorithm/ising_n34.qasm
+  path: compilers/fpqa_revision_AE/benchmarks/algorithm/ising_n34.qasm
   time:
     1q_gate: 1.5625e-05
     2q_gate: 9.119999999999997e-06
     movement: 0.007199999999999999
     total_time: 0.0072247449999999986
     transfer: 0.0
-- benchmark: fpqa_revision_AE/benchmarks/algorithm/qaoa4_n20.qasm
+- benchmark: compilers/fpqa_revision_AE/benchmarks/algorithm/qaoa4_n20.qasm
   circ_stats:
     avg_move_distance: 0.0011539982666974808
     avg_move_speed: 0.06632173946537247
-    compilation_time: 0.9530832767486572
+    compilation_time: 0.24543094635009766
     depth: 58
     each_move_distance_mean: 1.3264347895361444
     each_move_distance_std: 3.012482947292631
@@ -1349,101 +834,7 @@
     atom_loss_prob: 0.0068
     atom_transfer_time: 1.4999999999999999e-05
     base_set: default0
-    configs:
-      backend_params:
-        base_set: default0
-        nonretranspile_changes:
-          backer_penalty:
-          - 0
-          geyser_dump_transpiled_qasm:
-          - false
-        retranspile_changes: {}
-      benchmarks:
-      - n_qubits:
-        - 4
-        name: algorithm
-        type:
-        - vqe
-      - n_qubits:
-        - 9
-        name: algorithm
-        type:
-        - ga
-      - n_qubits:
-        - 6
-        name: algorithm
-        type:
-        - qaoa
-      - n_qubits:
-        - 26
-        name: algorithm
-        type:
-        - ising
-      - n_qubits:
-        - 10
-        name: algorithm
-        type:
-        - adder
-      - n_qubits:
-        - 34
-        name: algorithm
-        type:
-        - ising
-      - n_qubits:
-        - 20
-        name: algorithm
-        type:
-        - qaoa4
-      - n_qubits:
-        - 7
-        name: algorithm
-        type:
-        - hhl
-      - n_qubits:
-        - 16
-        name: algorithm
-        type:
-        - dnn
-      - n_qubits:
-        - 33
-        name: algorithm
-        type:
-        - dnn
-      - n_qubits:
-        - 98
-        name: algorithm
-        type:
-        - ising
-      - n_qubits:
-        - 51
-        name: algorithm
-        type:
-        - dnn
-      - n_qubits:
-        - 18
-        name: algorithm
-        type:
-        - qft
-      - n_qubits:
-        - 40
-        name: algorithm
-        type:
-        - qaoa8
-      - n_qubits:
-        - 18
-        name: algorithm
-        type:
-        - sqrt
-      - n_qubits:
-        - 32
-        name: algorithm
-        type:
-        - QV
-      compiler:
-        name: fpqac_generic
-        print_log: false
-      count_gates: true
-      result_path: fpqa_revision_AE/results/13_isca_maintable/arb/fpqac
+    configs: *id003
     cooling_deltaN_thres: 15
     dump_full_report: false
     faa_cmap_bidirect: true
@@ -1455,14 +846,8 @@
     fpqac_allow_order_violation: false
     fpqac_allow_overlap_violation: false
     fpqac_generic_cmap_bidirect: true
-    fpqac_generic_n_cols_cmap: &id013
-    - 10
-    - 10
-    - 10
-    fpqac_generic_n_rows_cmap: &id014
-    - 10
-    - 10
-    - 10
+    fpqac_generic_n_cols_cmap: *id001
+    fpqac_generic_n_rows_cmap: *id002
     fpqac_generic_partition_factor: 0.9
     fpqac_generic_partition_method: heuristic
     fpqac_generic_seed_transpiler: 0
@@ -1477,12 +862,9 @@
     lambd: 0.109375
     log_path: null
     n_aods: 1
-    n_atoms_per_array:
-    - 100
-    - 100
-    - 100
-    n_cols: *id013
-    n_rows: *id014
+    n_atoms_per_array: *id004
+    n_cols: *id001
+    n_rows: *id002
     na_1Q_fidelity: 0.99992
     na_1Q_time: 6.25e-07
     na_2Q_fidelity: 0.9975
@@ -1519,23 +901,23 @@
     flying_search_method: DP
     flying_square_mapping: true
     n_aods: 1
-    n_cols: *id013
-    n_rows: *id014
+    n_cols: *id001
+    n_rows: *id002
     na_1Q_fidelity: 0.99992
     na_2Q_fidelity: 0.9975
     na_N_max: 33
-  path: fpqa_revision_AE/benchmarks/algorithm/qaoa4_n20.qasm
+  path: compilers/fpqa_revision_AE/benchmarks/algorithm/qaoa4_n20.qasm
   time:
     1q_gate: 3.6875000000000056e-05
     2q_gate: 2.203999999999999e-05
     movement: 0.017400000000000006
     total_time: 0.017458915000000005
     transfer: 0.0
-- benchmark: fpqa_revision_AE/benchmarks/algorithm/hhl_n7.qasm
+- benchmark: compilers/fpqa_revision_AE/benchmarks/algorithm/hhl_n7.qasm
   circ_stats:
     avg_move_distance: 0.0010659634725483837
     avg_move_speed: 0.030111962501366774
-    compilation_time: 1.7722299098968506
+    compilation_time: 0.3609170913696289
     depth: 118
     each_move_distance_mean: 0.6022392500783732
     each_move_distance_std: 1.3551606650275534
@@ -1568,101 +950,7 @@
     atom_loss_prob: 0.0068
     atom_transfer_time: 1.4999999999999999e-05
     base_set: default0
-    configs:
-      backend_params:
-        base_set: default0
-        nonretranspile_changes:
-          backer_penalty:
-          - 0
-          geyser_dump_transpiled_qasm:
-          - false
-        retranspile_changes: {}
-      benchmarks:
-      - n_qubits:
-        - 4
-        name: algorithm
-        type:
-        - vqe
-      - n_qubits:
-        - 9
-        name: algorithm
-        type:
-        - ga
-      - n_qubits:
-        - 6
-        name: algorithm
-        type:
-        - qaoa
-      - n_qubits:
-        - 26
-        name: algorithm
-        type:
-        - ising
-      - n_qubits:
-        - 10
-        name: algorithm
-        type:
-        - adder
-      - n_qubits:
-        - 34
-        name: algorithm
-        type:
-        - ising
-      - n_qubits:
-        - 20
-        name: algorithm
-        type:
-        - qaoa4
-      - n_qubits:
-        - 7
-        name: algorithm
-        type:
-        - hhl
-      - n_qubits:
-        - 16
-        name: algorithm
-        type:
-        - dnn
-      - n_qubits:
-        - 33
-        name: algorithm
-        type:
-        - dnn
-      - n_qubits:
-        - 98
-        name: algorithm
-        type:
-        - ising
-      - n_qubits:
-        - 51
-        name: algorithm
-        type:
-        - dnn
-      - n_qubits:
-        - 18
-        name: algorithm
-        type:
-        - qft
-      - n_qubits:
-        - 40
-        name: algorithm
-        type:
-        - qaoa8
-      - n_qubits:
-        - 18
-        name: algorithm
-        type:
-        - sqrt
-      - n_qubits:
-        - 32
-        name: algorithm
-        type:
-        - QV
-      compiler:
-        name: fpqac_generic
-        print_log: false
-      count_gates: true
-      result_path: fpqa_revision_AE/results/13_isca_maintable/arb/fpqac
+    configs: *id003
     cooling_deltaN_thres: 15
     dump_full_report: false
     faa_cmap_bidirect: true
@@ -1674,14 +962,8 @@
     fpqac_allow_order_violation: false
     fpqac_allow_overlap_violation: false
     fpqac_generic_cmap_bidirect: true
-    fpqac_generic_n_cols_cmap: &id015
-    - 10
-    - 10
-    - 10
-    fpqac_generic_n_rows_cmap: &id016
-    - 10
-    - 10
-    - 10
+    fpqac_generic_n_cols_cmap: *id001
+    fpqac_generic_n_rows_cmap: *id002
     fpqac_generic_partition_factor: 0.9
     fpqac_generic_partition_method: heuristic
     fpqac_generic_seed_transpiler: 0
@@ -1696,12 +978,9 @@
     lambd: 0.109375
     log_path: null
     n_aods: 1
-    n_atoms_per_array:
-    - 100
-    - 100
-    - 100
-    n_cols: *id015
-    n_rows: *id016
+    n_atoms_per_array: *id004
+    n_cols: *id001
+    n_rows: *id002
     na_1Q_fidelity: 0.99992
     na_1Q_time: 6.25e-07
     na_2Q_fidelity: 0.9975
@@ -1738,23 +1017,23 @@
     flying_search_method: DP
     flying_square_mapping: true
     n_aods: 1
-    n_cols: *id015
-    n_rows: *id016
+    n_cols: *id001
+    n_rows: *id002
     na_1Q_fidelity: 0.99992
     na_2Q_fidelity: 0.9975
     na_N_max: 33
-  path: fpqa_revision_AE/benchmarks/algorithm/hhl_n7.qasm
+  path: compilers/fpqa_revision_AE/benchmarks/algorithm/hhl_n7.qasm
   time:
     1q_gate: 7.437500000000015e-05
     2q_gate: 4.483999999999998e-05
     movement: 0.035400000000000105
     total_time: 0.035519215000000104
     transfer: 0.0
-- benchmark: fpqa_revision_AE/benchmarks/algorithm/dnn_n16.qasm
+- benchmark: compilers/fpqa_revision_AE/benchmarks/algorithm/dnn_n16.qasm
   circ_stats:
     avg_move_distance: 0.0007583720226846855
     avg_move_speed: 0.04596194076876882
-    compilation_time: 1.3743679523468018
+    compilation_time: 0.3082921504974365
     depth: 55
     each_move_distance_mean: 0.919238815542512
     each_move_distance_std: 1.606945153784885
@@ -1787,101 +1066,7 @@
     atom_loss_prob: 0.0068
     atom_transfer_time: 1.4999999999999999e-05
     base_set: default0
-    configs:
-      backend_params:
-        base_set: default0
-        nonretranspile_changes:
-          backer_penalty:
-          - 0
-          geyser_dump_transpiled_qasm:
-          - false
-        retranspile_changes: {}
-      benchmarks:
-      - n_qubits:
-        - 4
-        name: algorithm
-        type:
-        - vqe
-      - n_qubits:
-        - 9
-        name: algorithm
-        type:
-        - ga
-      - n_qubits:
-        - 6
-        name: algorithm
-        type:
-        - qaoa
-      - n_qubits:
-        - 26
-        name: algorithm
-        type:
-        - ising
-      - n_qubits:
-        - 10
-        name: algorithm
-        type:
-        - adder
-      - n_qubits:
-        - 34
-        name: algorithm
-        type:
-        - ising
-      - n_qubits:
-        - 20
-        name: algorithm
-        type:
-        - qaoa4
-      - n_qubits:
-        - 7
-        name: algorithm
-        type:
-        - hhl
-      - n_qubits:
-        - 16
-        name: algorithm
-        type:
-        - dnn
-      - n_qubits:
-        - 33
-        name: algorithm
-        type:
-        - dnn
-      - n_qubits:
-        - 98
-        name: algorithm
-        type:
-        - ising
-      - n_qubits:
-        - 51
-        name: algorithm
-        type:
-        - dnn
-      - n_qubits:
-        - 18
-        name: algorithm
-        type:
-        - qft
-      - n_qubits:
-        - 40
-        name: algorithm
-        type:
-        - qaoa8
-      - n_qubits:
-        - 18
-        name: algorithm
-        type:
-        - sqrt
-      - n_qubits:
-        - 32
-        name: algorithm
-        type:
-        - QV
-      compiler:
-        name: fpqac_generic
-        print_log: false
-      count_gates: true
-      result_path: fpqa_revision_AE/results/13_isca_maintable/arb/fpqac
+    configs: *id003
     cooling_deltaN_thres: 15
     dump_full_report: false
     faa_cmap_bidirect: true
@@ -1893,14 +1078,8 @@
     fpqac_allow_order_violation: false
     fpqac_allow_overlap_violation: false
     fpqac_generic_cmap_bidirect: true
-    fpqac_generic_n_cols_cmap: &id017
-    - 10
-    - 10
-    - 10
-    fpqac_generic_n_rows_cmap: &id018
-    - 10
-    - 10
-    - 10
+    fpqac_generic_n_cols_cmap: *id001
+    fpqac_generic_n_rows_cmap: *id002
     fpqac_generic_partition_factor: 0.9
     fpqac_generic_partition_method: heuristic
     fpqac_generic_seed_transpiler: 0
@@ -1915,12 +1094,9 @@
     lambd: 0.109375
     log_path: null
     n_aods: 1
-    n_atoms_per_array:
-    - 100
-    - 100
-    - 100
-    n_cols: *id017
-    n_rows: *id018
+    n_atoms_per_array: *id004
+    n_cols: *id001
+    n_rows: *id002
     na_1Q_fidelity: 0.99992
     na_1Q_time: 6.25e-07
     na_2Q_fidelity: 0.9975
@@ -1957,23 +1133,23 @@
     flying_search_method: DP
     flying_square_mapping: true
     n_aods: 1
-    n_cols: *id017
-    n_rows: *id018
+    n_cols: *id001
+    n_rows: *id002
     na_1Q_fidelity: 0.99992
     na_2Q_fidelity: 0.9975
     na_N_max: 33
-  path: fpqa_revision_AE/benchmarks/algorithm/dnn_n16.qasm
+  path: compilers/fpqa_revision_AE/benchmarks/algorithm/dnn_n16.qasm
   time:
     1q_gate: 3.500000000000005e-05
     2q_gate: 2.089999999999999e-05
     movement: 0.0165
     total_time: 0.016555900000000002
     transfer: 0.0
-- benchmark: fpqa_revision_AE/benchmarks/algorithm/dnn_n33.qasm
+- benchmark: compilers/fpqa_revision_AE/benchmarks/algorithm/dnn_n33.qasm
   circ_stats:
     avg_move_distance: 0.002937055423791321
     avg_move_speed: 0.046619927361767004
-    compilation_time: 2.0228590965270996
+    compilation_time: 0.4724600315093994
     depth: 210
     each_move_distance_mean: 0.9323985472797397
     each_move_distance_std: 2.1887415697124553
@@ -2006,101 +1182,7 @@
     atom_loss_prob: 0.0068
     atom_transfer_time: 1.4999999999999999e-05
     base_set: default0
-    configs:
-      backend_params:
-        base_set: default0
-        nonretranspile_changes:
-          backer_penalty:
-          - 0
-          geyser_dump_transpiled_qasm:
-          - false
-        retranspile_changes: {}
-      benchmarks:
-      - n_qubits:
-        - 4
-        name: algorithm
-        type:
-        - vqe
-      - n_qubits:
-        - 9
-        name: algorithm
-        type:
-        - ga
-      - n_qubits:
-        - 6
-        name: algorithm
-        type:
-        - qaoa
-      - n_qubits:
-        - 26
-        name: algorithm
-        type:
-        - ising
-      - n_qubits:
-        - 10
-        name: algorithm
-        type:
-        - adder
-      - n_qubits:
-        - 34
-        name: algorithm
-        type:
-        - ising
-      - n_qubits:
-        - 20
-        name: algorithm
-        type:
-        - qaoa4
-      - n_qubits:
-        - 7
-        name: algorithm
-        type:
-        - hhl
-      - n_qubits:
-        - 16
-        name: algorithm
-        type:
-        - dnn
-      - n_qubits:
-        - 33
-        name: algorithm
-        type:
-        - dnn
-      - n_qubits:
-        - 98
-        name: algorithm
-        type:
-        - ising
-      - n_qubits:
-        - 51
-        name: algorithm
-        type:
-        - dnn
-      - n_qubits:
-        - 18
-        name: algorithm
-        type:
-        - qft
-      - n_qubits:
-        - 40
-        name: algorithm
-        type:
-        - qaoa8
-      - n_qubits:
-        - 18
-        name: algorithm
-        type:
-        - sqrt
-      - n_qubits:
-        - 32
-        name: algorithm
-        type:
-        - QV
-      compiler:
-        name: fpqac_generic
-        print_log: false
-      count_gates: true
-      result_path: fpqa_revision_AE/results/13_isca_maintable/arb/fpqac
+    configs: *id003
     cooling_deltaN_thres: 15
     dump_full_report: false
     faa_cmap_bidirect: true
@@ -2112,14 +1194,8 @@
     fpqac_allow_order_violation: false
     fpqac_allow_overlap_violation: false
     fpqac_generic_cmap_bidirect: true
-    fpqac_generic_n_cols_cmap: &id019
-    - 10
-    - 10
-    - 10
-    fpqac_generic_n_rows_cmap: &id020
-    - 10
-    - 10
-    - 10
+    fpqac_generic_n_cols_cmap: *id001
+    fpqac_generic_n_rows_cmap: *id002
     fpqac_generic_partition_factor: 0.9
     fpqac_generic_partition_method: heuristic
     fpqac_generic_seed_transpiler: 0
@@ -2134,12 +1210,9 @@
     lambd: 0.109375
     log_path: null
     n_aods: 1
-    n_atoms_per_array:
-    - 100
-    - 100
-    - 100
-    n_cols: *id019
-    n_rows: *id020
+    n_atoms_per_array: *id004
+    n_cols: *id001
+    n_rows: *id002
     na_1Q_fidelity: 0.99992
     na_1Q_time: 6.25e-07
     na_2Q_fidelity: 0.9975
@@ -2176,23 +1249,23 @@
     flying_search_method: DP
     flying_square_mapping: true
     n_aods: 1
-    n_cols: *id019
-    n_rows: *id020
+    n_cols: *id001
+    n_rows: *id002
     na_1Q_fidelity: 0.99992
     na_2Q_fidelity: 0.9975
     na_N_max: 33
-  path: fpqa_revision_AE/benchmarks/algorithm/dnn_n33.qasm
+  path: compilers/fpqa_revision_AE/benchmarks/algorithm/dnn_n33.qasm
   time:
     1q_gate: 0.00012375000000000027
     2q_gate: 7.980000000000029e-05
     movement: 0.06300000000000025
     total_time: 0.06320355000000025
     transfer: 0.0
-- benchmark: fpqa_revision_AE/benchmarks/algorithm/ising_n98.qasm
+- benchmark: compilers/fpqa_revision_AE/benchmarks/algorithm/ising_n98.qasm
   circ_stats:
     avg_move_distance: 0.0003845574617733086
     avg_move_speed: 0.014734002366793435
-    compilation_time: 2.2273201942443848
+    compilation_time: 0.5594220161437988
     depth: 87
     each_move_distance_mean: 0.2946800473697393
     each_move_distance_std: 1.0795061385340938
@@ -2225,101 +1298,7 @@
     atom_loss_prob: 0.0068
     atom_transfer_time: 1.4999999999999999e-05
     base_set: default0
-    configs:
-      backend_params:
-        base_set: default0
-        nonretranspile_changes:
-          backer_penalty:
-          - 0
-          geyser_dump_transpiled_qasm:
-          - false
-        retranspile_changes: {}
-      benchmarks:
-      - n_qubits:
-        - 4
-        name: algorithm
-        type:
-        - vqe
-      - n_qubits:
-        - 9
-        name: algorithm
-        type:
-        - ga
-      - n_qubits:
-        - 6
-        name: algorithm
-        type:
-        - qaoa
-      - n_qubits:
-        - 26
-        name: algorithm
-        type:
-        - ising
-      - n_qubits:
-        - 10
-        name: algorithm
-        type:
-        - adder
-      - n_qubits:
-        - 34
-        name: algorithm
-        type:
-        - ising
-      - n_qubits:
-        - 20
-        name: algorithm
-        type:
-        - qaoa4
-      - n_qubits:
-        - 7
-        name: algorithm
-        type:
-        - hhl
-      - n_qubits:
-        - 16
-        name: algorithm
-        type:
-        - dnn
-      - n_qubits:
-        - 33
-        name: algorithm
-        type:
-        - dnn
-      - n_qubits:
-        - 98
-        name: algorithm
-        type:
-        - ising
-      - n_qubits:
-        - 51
-        name: algorithm
-        type:
-        - dnn
-      - n_qubits:
-        - 18
-        name: algorithm
-        type:
-        - qft
-      - n_qubits:
-        - 40
-        name: algorithm
-        type:
-        - qaoa8
-      - n_qubits:
-        - 18
-        name: algorithm
-        type:
-        - sqrt
-      - n_qubits:
-        - 32
-        name: algorithm
-        type:
-        - QV
-      compiler:
-        name: fpqac_generic
-        print_log: false
-      count_gates: true
-      result_path: fpqa_revision_AE/results/13_isca_maintable/arb/fpqac
+    configs: *id003
     cooling_deltaN_thres: 15
     dump_full_report: false
     faa_cmap_bidirect: true
@@ -2331,14 +1310,8 @@
     fpqac_allow_order_violation: false
     fpqac_allow_overlap_violation: false
     fpqac_generic_cmap_bidirect: true
-    fpqac_generic_n_cols_cmap: &id021
-    - 10
-    - 10
-    - 10
-    fpqac_generic_n_rows_cmap: &id022
-    - 10
-    - 10
-    - 10
+    fpqac_generic_n_cols_cmap: *id001
+    fpqac_generic_n_rows_cmap: *id002
     fpqac_generic_partition_factor: 0.9
     fpqac_generic_partition_method: heuristic
     fpqac_generic_seed_transpiler: 0
@@ -2353,12 +1326,9 @@
     lambd: 0.109375
     log_path: null
     n_aods: 1
-    n_atoms_per_array:
-    - 100
-    - 100
-    - 100
-    n_cols: *id021
-    n_rows: *id022
+    n_atoms_per_array: *id004
+    n_cols: *id001
+    n_rows: *id002
     na_1Q_fidelity: 0.99992
     na_1Q_time: 6.25e-07
     na_2Q_fidelity: 0.9975
@@ -2395,23 +1365,23 @@
     flying_search_method: DP
     flying_square_mapping: true
     n_aods: 1
-    n_cols: *id021
-    n_rows: *id022
+    n_cols: *id001
+    n_rows: *id002
     na_1Q_fidelity: 0.99992
     na_2Q_fidelity: 0.9975
     na_N_max: 33
-  path: fpqa_revision_AE/benchmarks/algorithm/ising_n98.qasm
+  path: compilers/fpqa_revision_AE/benchmarks/algorithm/ising_n98.qasm
   time:
     1q_gate: 5.5000000000000104e-05
     2q_gate: 3.3059999999999985e-05
     movement: 0.026100000000000054
     total_time: 0.026188060000000055
     transfer: 0.0
-- benchmark: fpqa_revision_AE/benchmarks/algorithm/dnn_n51.qasm
+- benchmark: compilers/fpqa_revision_AE/benchmarks/algorithm/dnn_n51.qasm
   circ_stats:
     avg_move_distance: 0.00397006994311981
     avg_move_speed: 0.03869463882183052
-    compilation_time: 2.7536110877990723
+    compilation_time: 0.6994171142578125
     depth: 342
     each_move_distance_mean: 0.7738927764592415
     each_move_distance_std: 2.0116421166877387
@@ -2444,101 +1414,7 @@
     atom_loss_prob: 0.0068
     atom_transfer_time: 1.4999999999999999e-05
     base_set: default0
-    configs:
-      backend_params:
-        base_set: default0
-        nonretranspile_changes:
-          backer_penalty:
-          - 0
-          geyser_dump_transpiled_qasm:
-          - false
-        retranspile_changes: {}
-      benchmarks:
-      - n_qubits:
-        - 4
-        name: algorithm
-        type:
-        - vqe
-      - n_qubits:
-        - 9
-        name: algorithm
-        type:
-        - ga
-      - n_qubits:
-        - 6
-        name: algorithm
-        type:
-        - qaoa
-      - n_qubits:
-        - 26
-        name: algorithm
-        type:
-        - ising
-      - n_qubits:
-        - 10
-        name: algorithm
-        type:
-        - adder
-      - n_qubits:
-        - 34
-        name: algorithm
-        type:
-        - ising
-      - n_qubits:
-        - 20
-        name: algorithm
-        type:
-        - qaoa4
-      - n_qubits:
-        - 7
-        name: algorithm
-        type:
-        - hhl
-      - n_qubits:
-        - 16
-        name: algorithm
-        type:
-        - dnn
-      - n_qubits:
-        - 33
-        name: algorithm
-        type:
-        - dnn
-      - n_qubits:
-        - 98
-        name: algorithm
-        type:
-        - ising
-      - n_qubits:
-        - 51
-        name: algorithm
-        type:
-        - dnn
-      - n_qubits:
-        - 18
-        name: algorithm
-        type:
-        - qft
-      - n_qubits:
-        - 40
-        name: algorithm
-        type:
-        - qaoa8
-      - n_qubits:
-        - 18
-        name: algorithm
-        type:
-        - sqrt
-      - n_qubits:
-        - 32
-        name: algorithm
-        type:
-        - QV
-      compiler:
-        name: fpqac_generic
-        print_log: false
-      count_gates: true
-      result_path: fpqa_revision_AE/results/13_isca_maintable/arb/fpqac
+    configs: *id003
     cooling_deltaN_thres: 15
     dump_full_report: false
     faa_cmap_bidirect: true
@@ -2550,14 +1426,8 @@
     fpqac_allow_order_violation: false
     fpqac_allow_overlap_violation: false
     fpqac_generic_cmap_bidirect: true
-    fpqac_generic_n_cols_cmap: &id023
-    - 10
-    - 10
-    - 10
-    fpqac_generic_n_rows_cmap: &id024
-    - 10
-    - 10
-    - 10
+    fpqac_generic_n_cols_cmap: *id001
+    fpqac_generic_n_rows_cmap: *id002
     fpqac_generic_partition_factor: 0.9
     fpqac_generic_partition_method: heuristic
     fpqac_generic_seed_transpiler: 0
@@ -2572,12 +1442,9 @@
     lambd: 0.109375
     log_path: null
     n_aods: 1
-    n_atoms_per_array:
-    - 100
-    - 100
-    - 100
-    n_cols: *id023
-    n_rows: *id024
+    n_atoms_per_array: *id004
+    n_cols: *id001
+    n_rows: *id002
     na_1Q_fidelity: 0.99992
     na_1Q_time: 6.25e-07
     na_2Q_fidelity: 0.9975
@@ -2614,23 +1481,23 @@
     flying_search_method: DP
     flying_square_mapping: true
     n_aods: 1
-    n_cols: *id023
-    n_rows: *id024
+    n_cols: *id001
+    n_rows: *id002
     na_1Q_fidelity: 0.99992
     na_2Q_fidelity: 0.9975
     na_N_max: 33
-  path: fpqa_revision_AE/benchmarks/algorithm/dnn_n51.qasm
+  path: compilers/fpqa_revision_AE/benchmarks/algorithm/dnn_n51.qasm
   time:
     1q_gate: 0.00020187500000000048
     2q_gate: 0.00012996000000000088
     movement: 0.10259999999999955
     total_time: 0.10293183499999956
     transfer: 0.0
-- benchmark: fpqa_revision_AE/benchmarks/algorithm/qft_n18.qasm
+- benchmark: compilers/fpqa_revision_AE/benchmarks/algorithm/qft_n18.qasm
   circ_stats:
     avg_move_distance: 0.004073135443397125
     avg_move_speed: 0.04973303349691239
-    compilation_time: 2.072396993637085
+    compilation_time: 0.5612730979919434
     depth: 273
     each_move_distance_mean: 0.9946606699746886
     each_move_distance_std: 1.327546572943961
@@ -2663,101 +1530,7 @@
     atom_loss_prob: 0.0068
     atom_transfer_time: 1.4999999999999999e-05
     base_set: default0
-    configs:
-      backend_params:
-        base_set: default0
-        nonretranspile_changes:
-          backer_penalty:
-          - 0
-          geyser_dump_transpiled_qasm:
-          - false
-        retranspile_changes: {}
-      benchmarks:
-      - n_qubits:
-        - 4
-        name: algorithm
-        type:
-        - vqe
-      - n_qubits:
-        - 9
-        name: algorithm
-        type:
-        - ga
-      - n_qubits:
-        - 6
-        name: algorithm
-        type:
-        - qaoa
-      - n_qubits:
-        - 26
-        name: algorithm
-        type:
-        - ising
-      - n_qubits:
-        - 10
-        name: algorithm
-        type:
-        - adder
-      - n_qubits:
-        - 34
-        name: algorithm
-        type:
-        - ising
-      - n_qubits:
-        - 20
-        name: algorithm
-        type:
-        - qaoa4
-      - n_qubits:
-        - 7
-        name: algorithm
-        type:
-        - hhl
-      - n_qubits:
-        - 16
-        name: algorithm
-        type:
-        - dnn
-      - n_qubits:
-        - 33
-        name: algorithm
-        type:
-        - dnn
-      - n_qubits:
-        - 98
-        name: algorithm
-        type:
-        - ising
-      - n_qubits:
-        - 51
-        name: algorithm
-        type:
-        - dnn
-      - n_qubits:
-        - 18
-        name: algorithm
-        type:
-        - qft
-      - n_qubits:
-        - 40
-        name: algorithm
-        type:
-        - qaoa8
-      - n_qubits:
-        - 18
-        name: algorithm
-        type:
-        - sqrt
-      - n_qubits:
-        - 32
-        name: algorithm
-        type:
-        - QV
-      compiler:
-        name: fpqac_generic
-        print_log: false
-      count_gates: true
-      result_path: fpqa_revision_AE/results/13_isca_maintable/arb/fpqac
+    configs: *id003
     cooling_deltaN_thres: 15
     dump_full_report: false
     faa_cmap_bidirect: true
@@ -2769,14 +1542,8 @@
     fpqac_allow_order_violation: false
     fpqac_allow_overlap_violation: false
     fpqac_generic_cmap_bidirect: true
-    fpqac_generic_n_cols_cmap: &id025
-    - 10
-    - 10
-    - 10
-    fpqac_generic_n_rows_cmap: &id026
-    - 10
-    - 10
-    - 10
+    fpqac_generic_n_cols_cmap: *id001
+    fpqac_generic_n_rows_cmap: *id002
     fpqac_generic_partition_factor: 0.9
     fpqac_generic_partition_method: heuristic
     fpqac_generic_seed_transpiler: 0
@@ -2791,12 +1558,9 @@
     lambd: 0.109375
     log_path: null
     n_aods: 1
-    n_atoms_per_array:
-    - 100
-    - 100
-    - 100
-    n_cols: *id025
-    n_rows: *id026
+    n_atoms_per_array: *id004
+    n_cols: *id001
+    n_rows: *id002
     na_1Q_fidelity: 0.99992
     na_1Q_time: 6.25e-07
     na_2Q_fidelity: 0.9975
@@ -2833,23 +1597,23 @@
     flying_search_method: DP
     flying_square_mapping: true
     n_aods: 1
-    n_cols: *id025
-    n_rows: *id026
+    n_cols: *id001
+    n_rows: *id002
     na_1Q_fidelity: 0.99992
     na_2Q_fidelity: 0.9975
     na_N_max: 33
-  path: fpqa_revision_AE/benchmarks/algorithm/qft_n18.qasm
+  path: compilers/fpqa_revision_AE/benchmarks/algorithm/qft_n18.qasm
   time:
     1q_gate: 0.0001712500000000004
     2q_gate: 0.0001037400000000007
     movement: 0.08189999999999992
     total_time: 0.08217498999999992
     transfer: 0.0
-- benchmark: fpqa_revision_AE/benchmarks/algorithm/qaoa8_n40.qasm
+- benchmark: compilers/fpqa_revision_AE/benchmarks/algorithm/qaoa8_n40.qasm
   circ_stats:
     avg_move_distance: 0.004427294451585833
     avg_move_speed: 0.06048216463915073
-    compilation_time: 2.185040235519409
+    compilation_time: 0.5283899307250977
     depth: 244
     each_move_distance_mean: 1.2096432928325835
     each_move_distance_std: 2.2927938457976604
@@ -2882,101 +1646,7 @@
     atom_loss_prob: 0.0068
     atom_transfer_time: 1.4999999999999999e-05
     base_set: default0
-    configs:
-      backend_params:
-        base_set: default0
-        nonretranspile_changes:
-          backer_penalty:
-          - 0
-          geyser_dump_transpiled_qasm:
-          - false
-        retranspile_changes: {}
-      benchmarks:
-      - n_qubits:
-        - 4
-        name: algorithm
-        type:
-        - vqe
-      - n_qubits:
-        - 9
-        name: algorithm
-        type:
-        - ga
-      - n_qubits:
-        - 6
-        name: algorithm
-        type:
-        - qaoa
-      - n_qubits:
-        - 26
-        name: algorithm
-        type:
-        - ising
-      - n_qubits:
-        - 10
-        name: algorithm
-        type:
-        - adder
-      - n_qubits:
-        - 34
-        name: algorithm
-        type:
-        - ising
-      - n_qubits:
-        - 20
-        name: algorithm
-        type:
-        - qaoa4
-      - n_qubits:
-        - 7
-        name: algorithm
-        type:
-        - hhl
-      - n_qubits:
-        - 16
-        name: algorithm
-        type:
-        - dnn
-      - n_qubits:
-        - 33
-        name: algorithm
-        type:
-        - dnn
-      - n_qubits:
-        - 98
-        name: algorithm
-        type:
-        - ising
-      - n_qubits:
-        - 51
-        name: algorithm
-        type:
-        - dnn
-      - n_qubits:
-        - 18
-        name: algorithm
-        type:
-        - qft
-      - n_qubits:
-        - 40
-        name: algorithm
-        type:
-        - qaoa8
-      - n_qubits:
-        - 18
-        name: algorithm
-        type:
-        - sqrt
-      - n_qubits:
-        - 32
-        name: algorithm
-        type:
-        - QV
-      compiler:
-        name: fpqac_generic
-        print_log: false
-      count_gates: true
-      result_path: fpqa_revision_AE/results/13_isca_maintable/arb/fpqac
+    configs: *id003
     cooling_deltaN_thres: 15
     dump_full_report: false
     faa_cmap_bidirect: true
@@ -2988,14 +1658,8 @@
     fpqac_allow_order_violation: false
     fpqac_allow_overlap_violation: false
     fpqac_generic_cmap_bidirect: true
-    fpqac_generic_n_cols_cmap: &id027
-    - 10
-    - 10
-    - 10
-    fpqac_generic_n_rows_cmap: &id028
-    - 10
-    - 10
-    - 10
+    fpqac_generic_n_cols_cmap: *id001
+    fpqac_generic_n_rows_cmap: *id002
     fpqac_generic_partition_factor: 0.9
     fpqac_generic_partition_method: heuristic
     fpqac_generic_seed_transpiler: 0
@@ -3010,12 +1674,9 @@
     lambd: 0.109375
     log_path: null
     n_aods: 1
-    n_atoms_per_array:
-    - 100
-    - 100
-    - 100
-    n_cols: *id027
-    n_rows: *id028
+    n_atoms_per_array: *id004
+    n_cols: *id001
+    n_rows: *id002
     na_1Q_fidelity: 0.99992
     na_1Q_time: 6.25e-07
     na_2Q_fidelity: 0.9975
@@ -3052,23 +1713,23 @@
     flying_search_method: DP
     flying_square_mapping: true
     n_aods: 1
-    n_cols: *id027
-    n_rows: *id028
+    n_cols: *id001
+    n_rows: *id002
     na_1Q_fidelity: 0.99992
     na_2Q_fidelity: 0.9975
     na_N_max: 33
-  path: fpqa_revision_AE/benchmarks/algorithm/qaoa8_n40.qasm
+  path: compilers/fpqa_revision_AE/benchmarks/algorithm/qaoa8_n40.qasm
   time:
     1q_gate: 0.00015312500000000035
     2q_gate: 9.272000000000051e-05
     movement: 0.07320000000000007
     total_time: 0.07344584500000007
     transfer: 0.0
-- benchmark: fpqa_revision_AE/benchmarks/algorithm/sqrt_n18.qasm
+- benchmark: compilers/fpqa_revision_AE/benchmarks/algorithm/sqrt_n18.qasm
   circ_stats:
     avg_move_distance: 0.024639467592844383
     avg_move_speed: 0.05072980768549389
-    compilation_time: 9.689586162567139
+    compilation_time: 3.6734251976013184
     depth: 1619
     each_move_distance_mean: 1.0145961537162353
     each_move_distance_std: 2.243025557856263
@@ -3101,101 +1762,7 @@
     atom_loss_prob: 0.0068
     atom_transfer_time: 1.4999999999999999e-05
     base_set: default0
-    configs:
-      backend_params:
-        base_set: default0
-        nonretranspile_changes:
-          backer_penalty:
-          - 0
-          geyser_dump_transpiled_qasm:
-          - false
-        retranspile_changes: {}
-      benchmarks:
-      - n_qubits:
-        - 4
-        name: algorithm
-        type:
-        - vqe
-      - n_qubits:
-        - 9
-        name: algorithm
-        type:
-        - ga
-      - n_qubits:
-        - 6
-        name: algorithm
-        type:
-        - qaoa
-      - n_qubits:
-        - 26
-        name: algorithm
-        type:
-        - ising
-      - n_qubits:
-        - 10
-        name: algorithm
-        type:
-        - adder
-      - n_qubits:
-        - 34
-        name: algorithm
-        type:
-        - ising
-      - n_qubits:
-        - 20
-        name: algorithm
-        type:
-        - qaoa4
-      - n_qubits:
-        - 7
-        name: algorithm
-        type:
-        - hhl
-      - n_qubits:
-        - 16
-        name: algorithm
-        type:
-        - dnn
-      - n_qubits:
-        - 33
-        name: algorithm
-        type:
-        - dnn
-      - n_qubits:
-        - 98
-        name: algorithm
-        type:
-        - ising
-      - n_qubits:
-        - 51
-        name: algorithm
-        type:
-        - dnn
-      - n_qubits:
-        - 18
-        name: algorithm
-        type:
-        - qft
-      - n_qubits:
-        - 40
-        name: algorithm
-        type:
-        - qaoa8
-      - n_qubits:
-        - 18
-        name: algorithm
-        type:
-        - sqrt
-      - n_qubits:
-        - 32
-        name: algorithm
-        type:
-        - QV
-      compiler:
-        name: fpqac_generic
-        print_log: false
-      count_gates: true
-      result_path: fpqa_revision_AE/results/13_isca_maintable/arb/fpqac
+    configs: *id003
     cooling_deltaN_thres: 15
     dump_full_report: false
     faa_cmap_bidirect: true
@@ -3207,14 +1774,8 @@
     fpqac_allow_order_violation: false
     fpqac_allow_overlap_violation: false
     fpqac_generic_cmap_bidirect: true
-    fpqac_generic_n_cols_cmap: &id029
-    - 10
-    - 10
-    - 10
-    fpqac_generic_n_rows_cmap: &id030
-    - 10
-    - 10
-    - 10
+    fpqac_generic_n_cols_cmap: *id001
+    fpqac_generic_n_rows_cmap: *id002
     fpqac_generic_partition_factor: 0.9
     fpqac_generic_partition_method: heuristic
     fpqac_generic_seed_transpiler: 0
@@ -3229,12 +1790,9 @@
     lambd: 0.109375
     log_path: null
     n_aods: 1
-    n_atoms_per_array:
-    - 100
-    - 100
-    - 100
-    n_cols: *id029
-    n_rows: *id030
+    n_atoms_per_array: *id004
+    n_cols: *id001
+    n_rows: *id002
     na_1Q_fidelity: 0.99992
     na_1Q_time: 6.25e-07
     na_2Q_fidelity: 0.9975
@@ -3271,23 +1829,23 @@
     flying_search_method: DP
     flying_square_mapping: true
     n_aods: 1
-    n_cols: *id029
-    n_rows: *id030
+    n_cols: *id001
+    n_rows: *id002
     na_1Q_fidelity: 0.99992
     na_2Q_fidelity: 0.9975
     na_N_max: 33
-  path: fpqa_revision_AE/benchmarks/algorithm/sqrt_n18.qasm
+  path: compilers/fpqa_revision_AE/benchmarks/algorithm/sqrt_n18.qasm
   time:
     1q_gate: 0.0010068749999999696
     2q_gate: 0.0006152200000000183
     movement: 0.4857000000000146
     total_time: 0.4873220950000146
     transfer: 0.0
-- benchmark: fpqa_revision_AE/benchmarks/algorithm/QV_n32.qasm
+- benchmark: compilers/fpqa_revision_AE/benchmarks/algorithm/QV_n32.qasm
   circ_stats:
     avg_move_distance: 0.011377614707988187
     avg_move_speed: 0.041448505311432376
-    compilation_time: 11.386488914489746
+    compilation_time: 3.0502359867095947
     depth: 915
     each_move_distance_mean: 0.8289701062377101
     each_move_distance_std: 1.9663757778146733
@@ -3320,101 +1878,7 @@
     atom_loss_prob: 0.0068
     atom_transfer_time: 1.4999999999999999e-05
     base_set: default0
-    configs:
-      backend_params:
-        base_set: default0
-        nonretranspile_changes:
-          backer_penalty:
-          - 0
-          geyser_dump_transpiled_qasm:
-          - false
-        retranspile_changes: {}
-      benchmarks:
-      - n_qubits:
-        - 4
-        name: algorithm
-        type:
-        - vqe
-      - n_qubits:
-        - 9
-        name: algorithm
-        type:
-        - ga
-      - n_qubits:
-        - 6
-        name: algorithm
-        type:
-        - qaoa
-      - n_qubits:
-        - 26
-        name: algorithm
-        type:
-        - ising
-      - n_qubits:
-        - 10
-        name: algorithm
-        type:
-        - adder
-      - n_qubits:
-        - 34
-        name: algorithm
-        type:
-        - ising
-      - n_qubits:
-        - 20
-        name: algorithm
-        type:
-        - qaoa4
-      - n_qubits:
-        - 7
-        name: algorithm
-        type:
-        - hhl
-      - n_qubits:
-        - 16
-        name: algorithm
-        type:
-        - dnn
-      - n_qubits:
-        - 33
-        name: algorithm
-        type:
-        - dnn
-      - n_qubits:
-        - 98
-        name: algorithm
-        type:
-        - ising
-      - n_qubits:
-        - 51
-        name: algorithm
-        type:
-        - dnn
-      - n_qubits:
-        - 18
-        name: algorithm
-        type:
-        - qft
-      - n_qubits:
-        - 40
-        name: algorithm
-        type:
-        - qaoa8
-      - n_qubits:
-        - 18
-        name: algorithm
-        type:
-        - sqrt
-      - n_qubits:
-        - 32
-        name: algorithm
-        type:
-        - QV
-      compiler:
-        name: fpqac_generic
-        print_log: false
-      count_gates: true
-      result_path: fpqa_revision_AE/results/13_isca_maintable/arb/fpqac
+    configs: *id003
     cooling_deltaN_thres: 15
     dump_full_report: false
     faa_cmap_bidirect: true
@@ -3426,14 +1890,8 @@
     fpqac_allow_order_violation: false
     fpqac_allow_overlap_violation: false
     fpqac_generic_cmap_bidirect: true
-    fpqac_generic_n_cols_cmap: &id031
-    - 10
-    - 10
-    - 10
-    fpqac_generic_n_rows_cmap: &id032
-    - 10
-    - 10
-    - 10
+    fpqac_generic_n_cols_cmap: *id001
+    fpqac_generic_n_rows_cmap: *id002
     fpqac_generic_partition_factor: 0.9
     fpqac_generic_partition_method: heuristic
     fpqac_generic_seed_transpiler: 0
@@ -3448,12 +1906,9 @@
     lambd: 0.109375
     log_path: null
     n_aods: 1
-    n_atoms_per_array:
-    - 100
-    - 100
-    - 100
-    n_cols: *id031
-    n_rows: *id032
+    n_atoms_per_array: *id004
+    n_cols: *id001
+    n_rows: *id002
     na_1Q_fidelity: 0.99992
     na_1Q_time: 6.25e-07
     na_2Q_fidelity: 0.9975
@@ -3490,12 +1945,12 @@
     flying_search_method: DP
     flying_square_mapping: true
     n_aods: 1
-    n_cols: *id031
-    n_rows: *id032
+    n_cols: *id001
+    n_rows: *id002
     na_1Q_fidelity: 0.99992
     na_2Q_fidelity: 0.9975
     na_N_max: 33
-  path: fpqa_revision_AE/benchmarks/algorithm/QV_n32.qasm
+  path: compilers/fpqa_revision_AE/benchmarks/algorithm/QV_n32.qasm
   time:
     1q_gate: 0.0005724999999999872
     2q_gate: 0.0003477000000000042

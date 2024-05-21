@@ -71,7 +71,7 @@ class AlgorithmBenchmark(Benchmark):
     def __init__(self, type, n_qubits):
         super().__init__()
         self.n_qubits = n_qubits
-        self.path = f"fpqa_revision_AE/benchmarks/algorithm/{type}_n{n_qubits}.qasm"
+        self.path = f"compilers/fpqa_revision_AE/benchmarks/algorithm/{type}_n{n_qubits}.qasm"
         print(self.path)
         self.circ = QuantumCircuit.from_qasm_file(self.path)
         self.circ.remove_final_measurements()

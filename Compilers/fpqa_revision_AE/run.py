@@ -7,7 +7,7 @@ from multiprocessing import Pool
 import numpy as np
 import yaml
 from torchpack.utils.config import configs
-
+import json
 from benchmarks.benchmark_set import BenchmarkSets
 from hyperparams import HyperParamSets
 from utils import count_1q_2q_gates, get_n2q_interation_stats
@@ -86,7 +86,7 @@ def main(args_config, args_pdb, opts, printing=True, multiprocessing=True):
     if printing:
         print("Start Compiling...")
 
-    if multiprocessing:
+    if False:
         args = []
         empty_benchmark_set = deepcopy(benchmark_sets)
         empty_benchmark_set.all_benchmarks = []
@@ -108,6 +108,7 @@ def main(args_config, args_pdb, opts, printing=True, multiprocessing=True):
     yaml.dump(all_res, open(f"{hyperparam_sets.configs.result_path}/res.yml", "w"))
     all_fid_list = []
     all_2q_list = []
+    all_1q_list = []
     all_depth_list = []
     all_time_list = []
     for res in all_res:
@@ -116,6 +117,7 @@ def main(args_config, args_pdb, opts, printing=True, multiprocessing=True):
         if "circ_stats" in res.keys():
             all_2q_list.append(res["circ_stats"]["n_2q_gate"])
             all_depth_list.append(res["circ_stats"]["n_2q_layer"])
+            all_1q_list.append(res["circ_stats"]["n_1q_gate"])
             all_time_list.append(res["time"]["total_time"])
         # print(res['fidelity']['total_fidelity'])
         if printing:
@@ -124,8 +126,29 @@ def main(args_config, args_pdb, opts, printing=True, multiprocessing=True):
     if printing:
         print(all_fid_list) # Metric 2
         print(all_2q_list)
+        print(all_1q_list)
         print(all_depth_list) # Metric 1
         print(all_time_list) 
+
+    data = {
+        'compiler': 'FPQA',
+        'dim' : 0
+    }
+
+    count=0
+    for algorithm in benchmark_sets.all_benchmarks:
+        algorithm_packet={}
+        name=algorithm.path
+        algorithm_packet['2q_gates']=all_2q_list[count] 
+        algorithm_packet['2q_layers']=all_depth_list[count]
+        algorithm_packet['fidelity']=((.9999)**(all_1q_list[count]))*((1-(1-.994)/2)**(algorithm.n_qubits*all_depth_list[count]))
+        data[name]=[deepcopy(algorithm_packet)]
+        count+=1
+
+        
+    with open('data_collected.json', 'a') as file:
+        json.dump(data, file)
+        file.write('\n')  # Ensures each entry is on a new line
     return all_res
 
 
